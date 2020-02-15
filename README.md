@@ -35,9 +35,9 @@ The top level .vhd files are: rs_decoder.vhd and rs_decoder
 
 If you look the directory structure, inside the projects (rs_decoder and rs_encoder) there are for folders:
 
-rtl - VHDL implementation of the IP
-sim - RTL simlulation scripts using Mentor ModelSim Student Edition
-formal - Scripts for formal verification using Cadence JasperGold Apps
-syn - Script for synthesis in FPGA using Quartus Prime Lite Edition
+rtl - VHDL implementation of the IP \
+sim - RTL simlulation scripts using Mentor ModelSim Student Edition \
+formal - Scripts for formal verification using Cadence JasperGold Apps \
+syn - Script for synthesis in FPGA using Quartus Prime Lite Edition 
 
 There is a paper that explain all nuances of this project. However, it has not been published yet. Meanwhile, I ask to contact matgonsil@gmail.com for any questions.
