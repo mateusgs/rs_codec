@@ -33,7 +33,7 @@ o_symbol - O - Output data symbol
 
 The top level .vhd files are: rs_decoder.vhd and rs_decoder
 
-If you look the directory structure, inside the projects (rs_decoder and rs_encoder) there are for folders:
+If you look the directory structure, inside the projects (rs_decoder and rs_encoder) there are four folders:
 
 rtl - VHDL implementation of the IP \
 sim - RTL simlulation scripts using Mentor ModelSim Student Edition \
