@@ -41,3 +41,5 @@ formal - Scripts for formal verification using Cadence JasperGold Apps \
 syn - Script for synthesis in FPGA using Quartus Prime Lite Edition 
 
 There is a paper that explain all nuances of this project. However, it has not been published yet. Meanwhile, I ask to contact matgonsil@gmail.com for any questions.
+
+This project started at Universidade Federal de Minas Gerais (UFMG), and it is open for the community under the licence "Creative Commons Zero v1.0 Universal".
