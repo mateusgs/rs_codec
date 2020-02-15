@@ -17,7 +17,7 @@ Top level ports:
 I - Input
 O - Ouput
 
-clk - I - System clock pin
+clk - I - System clock pin \n
 rst - I - System reset pin
 i_start_cw - I - Delimiter of input codeword start
 i_end_cw - I - Delimiter of input codeword end
