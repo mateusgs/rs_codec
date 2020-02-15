@@ -18,17 +18,17 @@ I - Input
 O - Ouput
 
 clk - I - System clock pin \
-rst - I - System reset pin
-i_start_cw - I - Delimiter of input codeword start
-i_end_cw - I - Delimiter of input codeword end
-i_valid - I - Validity of input symbols
-i_symbol - I - Input data symbol
-o_start_cw - O - Delimiter of output codeword starting
-o_end_cw - O - Delimiter of output codeword ending
-o_in_ready - O - Readiness to accept new input symbols
-o_valid - O - Validity of output symbols
-o_error - O - Error indicator
-o_symbol - O - Output data symbol
+rst - I - System reset pin \
+i_start_cw - I - Delimiter of input codeword start \
+i_end_cw - I - Delimiter of input codeword end \
+i_valid - I - Validity of input symbols \ 
+i_symbol - I - Input data symbol \
+o_start_cw - O - Delimiter of output codeword starting \
+o_end_cw - O - Delimiter of output codeword ending \
+o_in_ready - O - Readiness to accept new input symbols \
+o_valid - O - Validity of output symbols \
+o_error - O - Error indicator \
+o_symbol - O - Output data symbol \
 
 
 The top level .vhd files are: rs_decoder.vhd and rs_decoder
