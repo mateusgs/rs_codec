@@ -28,7 +28,7 @@ o_end_cw - O - Delimiter of output codeword ending \
 o_in_ready - O - Readiness to accept new input symbols \
 o_valid - O - Validity of output symbols \
 o_error - O - Error indicator \
-o_symbol - O - Output data symbol \
+o_symbol - O - Output data symbol
 
 
 The top level .vhd files are: rs_decoder.vhd and rs_decoder
