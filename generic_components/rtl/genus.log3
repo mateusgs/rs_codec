@@ -1,0 +1,17 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2017 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+Version: 17.20-p003_1, built Wed Nov 29 2017
+Options: -legacy_ui genus.tcl 
+Date:    Fri Jun 26 23:41:16 2020
+Host:    optmaS1 (x86_64 w/Linux 3.10.0-1062.4.3.el7.x86_64) (4cores*8cpus*1physical cpu*Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz 8192KB) (16151396KB)
+OS:      CentOS Linux release 7.7.1908 (Core)
+
+Checking out license: Genus_Synthesis
+invalid command name "set_attribute"
+    while executing
+"set_attribute library { tutorial.lib }"
+    (file "genus.tcl" line 2)
+Abnormal exit.

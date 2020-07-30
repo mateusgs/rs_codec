@@ -1,0 +1,63 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2017 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+Version: 17.20-p003_1, built Wed Nov 29 2017
+Options: genus.tcl 
+Date:    Fri Jun 26 23:34:29 2020
+Host:    optmaS1 (x86_64 w/Linux 3.10.0-1062.4.3.el7.x86_64) (4cores*8cpus*1physical cpu*Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz 8192KB) (16151396KB)
+OS:      CentOS Linux release 7.7.1908 (Core)
+
+Checking out license: Genus_Synthesis
+library IEEE;
+      |
+use IEEE.STD_LOGIC_1164.all;
+  |
+use IEEE.STD_LOGIC_1164.all;
+        |
+use IEEE.STD_LOGIC_1164.all;
+        |
+use IEEE.NUMERIC_STD.all;
+  |
+use IEEE.NUMERIC_STD.all;
+        |
+use IEEE.NUMERIC_STD.all;
+        |
+entity sync_ld_dff is
+                 |
+	port (
+	     |
+		clk : in std_logic;
+		    |
+		ld : in std_logic;
+		   |
+		i_data : in std_logic_vector ((WORD_LENGTH - 1) downto 0);
+		       |
+		o_data : out std_logic_vector ((WORD_LENGTH - 1) downto 0));
+		       |
+end sync_ld_dff;
+  |
+architecture bh_reg of sync_ld_dff is
+                  |
+					if (rst = '1') then --Clears the register asynchronously.
+					        |
+					if (rst = '1') then --Clears the register asynchronously.
+					           |
+						o_data <= (others => '0');
+						                   |
+						o_data <= (others => '0');
+						                      |
+					elsif (ld = '1') then
+					      |
+					elsif (ld = '1') then
+					          |
+					elsif (ld = '1') then
+					             |
+invalid command name "rc_st::bg::send_errorInfo_if"
+    while executing
+"rc_st::bg::send_errorInfo_if [list read_hdl sync_ld_dff.vhd]"
+    invoked from within
+"read_hdl sync_ld_dff.vhd"
+    (file "genus.tcl" line 3)
+Abnormal exit.

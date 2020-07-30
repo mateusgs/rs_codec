@@ -1,0 +1,59 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2017 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+Version: 17.20-p003_1, built Wed Nov 29 2017
+Options: -legacy_ui 
+Date:    Fri Jun 26 23:45:22 2020
+Host:    optmaS1 (x86_64 w/Linux 3.10.0-1062.4.3.el7.x86_64) (4cores*8cpus*1physical cpu*Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz 8192KB) (16151396KB)
+OS:      CentOS Linux release 7.7.1908 (Core)
+
+Checking out license: Genus_Synthesis
+
+Loading tool scripts...
+
+Finished loading tool scripts (6 seconds elapsed).
+
+WARNING: This version of the tool is 941 days old.
+legacy_genus:/> set_attribute -help
+
+Usage: ::legacy::set_attribute [-quiet] [-lock] <string> <string> [<object>+]
+
+    [-quiet]:
+        keeps quiet unless there are problems 
+    [-lock]:
+        attribute becomes read only once locked 
+    <string>:
+        attribute name 
+    <string>:
+        new value. A compound string (containing spaces) should be represented as a list (using double-quotes or braces). 
+    [<object>+]:
+        object(s) of interest 
+
+'set_attribute -h <attribute_name> <object_type>' will give you more information. Both 'attribute_name' and 'object_type' support the wildcard ('*') character for 
+non-hidden attributes. Valid object types are: 
+
+        actual_scan_chain            dft_configuration_mode         hdl_pin                        nominal_condition              route_rule 
+        actual_scan_segment          exception                      hdl_proc                       opcg_domain                    routetype 
+        analysis_view                external_delay                 hdl_subp                       opcg_mode                      row 
+        attribute                    flow                           instance                       operating_condition            scan_chain 
+        base_cell                    flow_step                      isolation_rule                 pcell                          scan_segment 
+        base_cell_set                fnet                           jtag_instruction               pg_lib_pin                     sdp_column 
+        base_pin                     formal_verification_constraint jtag_instruction_register      pg_net                         sdp_group 
+        blackbox                     fpobject                       jtag_macro                     pgpin                          sdp_instance 
+        blockage                     gcell                          jtag_port                      pin                            sdp_row 
+        boundary_scan_segment        group                          layer                          pin_bus                        specialnet 
+        bump                         hdl_arch                       level_shifter_rule             pinstance                      state_retention_rule 
+        clock                        hdl_bind                       libarc                         pnet                           subdesign 
+        cluster                      hdl_block                      libcell                        port                           subport 
+        constant                     hdl_comp                       libpin                         port_bus                       subport_bus 
+        constraint_mode              hdl_impl                       library                        power_domain                   test_bus_port 
+        cost_group                   hdl_inst                       library_domain                 power_intent_command_id        test_clock 
+        ctp_source                   hdl_label                      message                        power_mode                     test_signal 
+        def_pin                      hdl_lib                        mode                           power_scope                    timing_condition 
+        delay_corner                 hdl_oper                       modules                        region                         via 
+        design                       hdl_param                      net                            root                           wireload 
+        
+legacy_genus:/> exit
+Normal exit.

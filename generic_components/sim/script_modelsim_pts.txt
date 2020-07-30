@@ -1,0 +1,39 @@
+quit -sim
+	
+cd ..
+cd ..
+cd ..
+
+
+if {[file isdirectory UFMG_digital_design]} {
+		
+	if {![file isdirectory modelsim_output_files]} {
+		file mkdir modelsim_output_files
+	}
+	
+	cd modelsim_output_files
+	
+	if {[file exists work]} {
+		vdel -lib rtl_work -all
+	}
+
+	vlib rtl_work
+	vmap work rtl_work
+
+	
+	vcom -2008 -work work ../UFMG_digital_design/generic_components/rtl/generic_types.vhd
+	vcom -2008 -work work ../UFMG_digital_design/generic_components/rtl/generic_functions.vhd
+
+	vcom -2008 -work work ../UFMG_digital_design/generic_components/rtl/parallel_to_serial.vhd
+
+	vcom -2008 -work work ../UFMG_digital_design/generic_components/sim/testbench_pts.vhd
+
+	vsim -t 1ps -L altera -L lpm -L sgate -L altera_mf -L altera_lnsim -L cycloneii -L rtl_work -L work -voptargs="+acc"  testbench_pts
+	vsim -L altera -L lpm -L sgate -L altera_mf -L altera_lnsim -L cycloneii -L rtl_work -L work -voptargs=\"+acc\" -t 1ps testbench_pts
+	add wave *
+	add wave -radix unsigned -r r_counter
+	add wave -r r_data r_empty
+	view structure
+	view signals
+	run 1 us
+}

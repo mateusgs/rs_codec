@@ -1,0 +1,45 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2017 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+Version: 17.20-p003_1, built Wed Nov 29 2017
+Options: 
+Date:    Fri Jun 26 23:43:58 2020
+Host:    optmaS1 (x86_64 w/Linux 3.10.0-1062.4.3.el7.x86_64) (4cores*8cpus*1physical cpu*Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz 8192KB) (16151396KB)
+OS:      CentOS Linux release 7.7.1908 (Core)
+
+Checking out license: Genus_Synthesis
+
+Loading tool scripts...
+
+Finished loading tool scripts (7 seconds elapsed).
+
+WARNING: The genus.tcl file in the current directory /home/Mateus/workspace/UFMG_digital_design/generic_components/rtl is no longer loaded at startup.
+         You should change the name to genus_startup.tcl if you want it loaded at startup.
+WARNING: This version of the tool is 941 days old.
+@genus:root: 1> set_attribute -help
+Error   : The tool is running in common ui mode. [TUI-509] [::unknown]
+        : Command 'set_attribute' is a legacy ui command.
+        : Use set_db/get_db instead or do set_db common_ui false at start of the run.
+@genus:root: 2> set_db -help
+  set_db: set attributes on objects 
+
+Usage: set_db [-quiet] [-verbose] [-dbu] [-index <string>] <string> <string> [<string>]
+
+    [-quiet]:
+        keeps quiet unless there are problems 
+    [-verbose]:
+        enables verbose 
+    [-dbu]:
+        indicates that attribute (coord, pt, rect, polygon, area, etc.) will be in database units 
+    [-index <string>]:
+        list of indices in a form of pairs of index_name value or a object name 
+    <string>:
+        <start> can be any object list (or collection) or <shorthand> (e.g., nets, insts, etc) 
+    <string>:
+        the <chain> is in the form [.<attribute_name1>[.<attribute_name2>]...] 
+    [<string>]:
+        the attribute value 
+@genus:root: 3> exit
+Normal exit.

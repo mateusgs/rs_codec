@@ -1,0 +1,270 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2017 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+Version: 17.20-p003_1, built Wed Nov 29 2017
+Options: -legacy_ui 
+Date:    Fri Jun 26 23:46:03 2020
+Host:    optmaS1 (x86_64 w/Linux 3.10.0-1062.4.3.el7.x86_64) (4cores*8cpus*1physical cpu*Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz 8192KB) (16151396KB)
+OS:      CentOS Linux release 7.7.1908 (Core)
+
+Checking out license: Genus_Synthesis
+
+Loading tool scripts...
+
+Finished loading tool scripts (7 seconds elapsed).
+
+WARNING: This version of the tool is 941 days old.
+legacy_genus:/> source genus.tcl
+Sourcing './genus.tcl' (Fri Jun 26 23:46:19 -03 2020)...
+  Setting attribute of root '/': 'lib_search_path' = /home/Mateus/workspace/UFMG_digital_design/generic_components/rtl
+library IEEE;
+      |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting a package item. in file 'sync_ld_dff.vhd' on line 1, column 7.
+        : Invalid Verilog syntax is parsed, or unsupported Verilog syntax is encountered.
+use IEEE.STD_LOGIC_1164.all;
+  |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting a package item. in file 'sync_ld_dff.vhd' on line 2, column 3.
+use IEEE.STD_LOGIC_1164.all;
+        |
+Error   : Illegal redeclaration. [VLOGPT-22] [read_hdl]
+        : Redeclaration of symbol 'IEEE' in file 'sync_ld_dff.vhd' on line 2, column 9.
+        : A variable cannot be redeclared in the same scope.
+use IEEE.STD_LOGIC_1164.all;
+        |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting token ';', found '.' in file 'sync_ld_dff.vhd' on line 2, column 9.
+use IEEE.NUMERIC_STD.all;
+  |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting a package item. in file 'sync_ld_dff.vhd' on line 3, column 3.
+use IEEE.NUMERIC_STD.all;
+        |
+Error   : Illegal redeclaration. [VLOGPT-22] [read_hdl]
+        : Redeclaration of symbol 'IEEE' in file 'sync_ld_dff.vhd' on line 3, column 9.
+use IEEE.NUMERIC_STD.all;
+        |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting token ';', found '.' in file 'sync_ld_dff.vhd' on line 3, column 9.
+entity sync_ld_dff is
+                 |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting token ';', found '<identifier>' in file 'sync_ld_dff.vhd' on line 5, column 18.
+	port (
+	     |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting token ';', found '(' in file 'sync_ld_dff.vhd' on line 8, column 7.
+		clk : in std_logic;
+		    |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting token ';', found ':' in file 'sync_ld_dff.vhd' on line 10, column 7.
+		ld : in std_logic;
+		   |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting token ';', found ':' in file 'sync_ld_dff.vhd' on line 11, column 6.
+		i_data : in std_logic_vector ((WORD_LENGTH - 1) downto 0);
+		       |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting token ';', found ':' in file 'sync_ld_dff.vhd' on line 12, column 10.
+		o_data : out std_logic_vector ((WORD_LENGTH - 1) downto 0));
+		       |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting token ';', found ':' in file 'sync_ld_dff.vhd' on line 13, column 10.
+end sync_ld_dff;
+  |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting a package item. in file 'sync_ld_dff.vhd' on line 14, column 3.
+architecture bh_reg of sync_ld_dff is
+                  |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting token ';', found '<identifier>' in file 'sync_ld_dff.vhd' on line 16, column 19.
+					if (rst = '1') then --Clears the register asynchronously.
+					        |
+Error   : Invalid based number. [VLOGPT-17] [read_hdl]
+        : Numeric string ''' in file 'sync_ld_dff.vhd' on line 21, column 14.
+        : A based number may be a binary 'b, octal 'o, hex 'h, or decimal 'd based number.
+					if (rst = '1') then --Clears the register asynchronously.
+					           |
+Error   : Invalid based number. [VLOGPT-17] [read_hdl]
+        : Numeric string ''' in file 'sync_ld_dff.vhd' on line 21, column 17.
+						o_data <= (others => '0');
+						                   |
+Error   : Invalid based number. [VLOGPT-17] [read_hdl]
+        : Numeric string ''' in file 'sync_ld_dff.vhd' on line 22, column 26.
+						o_data <= (others => '0');
+						                      |
+Error   : Invalid based number. [VLOGPT-17] [read_hdl]
+        : Numeric string ''' in file 'sync_ld_dff.vhd' on line 22, column 29.
+					elsif (ld = '1') then
+					      |
+Error   : Parsing error. [VLOGPT-1] [read_hdl]
+        : Expecting token ';', found '(' in file 'sync_ld_dff.vhd' on line 23, column 12.
+					elsif (ld = '1') then
+					          |
+Error   : Invalid based number. [VLOGPT-17] [read_hdl]
+        : Numeric string ''' in file 'sync_ld_dff.vhd' on line 23, column 16.
+					elsif (ld = '1') then
+					             |
+Error   : Invalid based number. [VLOGPT-17] [read_hdl]
+        : Numeric string ''' in file 'sync_ld_dff.vhd' on line 23, column 19.
+1
+legacy_genus:/> read_hdl -help
+  read_hdl: reads in Verilog or VHDL files 
+
+Usage: read_hdl [-vhdl] [-v1995] [-v2001] [-sv] [-mixvlog] [-library <string>] [-netlist] [-define <string>]+ [<string>+] [-f <string>]
+
+    [-vhdl]:
+        specifies that HDL files are VHDL files 
+    [-v1995]:
+        specifies that HDL files conform to Verilog-1995 
+    [-v2001]:
+        specifies that HDL files conform to Verilog-2001 (default) 
+    [-sv]:
+        specifies that HDL files conform to SystemVerilog P1800 
+    [-mixvlog]:
+        specifies file extension based Verilog version detection 
+    [-library <string>]:
+        specifies the name of a VHDL or Verilog library 
+    [-netlist]:
+        specifies that HDL files conform to structural Verilog-1995 and is intended to be used in mixed input elaboration mode 
+    [-define <string>]:
+        defines Verilog macro 
+    [<string>+]:
+        the name of the HDL files to read 
+    [-f <string>]:
+        the name of list file for reading files from simulation environment 
+legacy_genus:/> source genus.tcl
+Sourcing './genus.tcl' (Fri Jun 26 23:47:52 -03 2020)...
+  Setting attribute of root '/': 'lib_search_path' = /home/Mateus/workspace/UFMG_digital_design/generic_components/rtl
+
+Threads Configured:3
+
+  Message Summary for Library tutorial.lib:
+  *****************************************
+  Could not find an attribute in the library. [LBR-436]: 52
+  Missing threshold parameters. [LBR-519]: 1
+  Missing library level attribute. [LBR-516]: 9
+  *****************************************
+ 
+Info    : Created nominal operating condition. [LBR-412]
+        : Operating condition '_nominal_' was created for the PVT values (1.000000, 5.000000, 25.000000) in library 'tutorial.lib'.
+        : The nominal operating condition represents either the nominal PVT values if specified in the library source, or the default PVT values (1.0, 1.0, 1.0).
+  Setting attribute of root '/': 'library' =  tutorial.lib 
+Warning : No top-level HDL designs to process.  [CDFG-304]
+        : .
+        : There are no top-level designs in the /hdl_libraries directory. This may be caused by:
+          - all designs are instantiated by another design.
+          - a top-level Verilog module or VHDL entity has the 'template' pragma or attribute.
+          - a top-level VHDL entity has an unconstrained array port.
+legacy_genus:/> read_hdl -help
+  read_hdl: reads in Verilog or VHDL files 
+
+Usage: read_hdl [-vhdl] [-v1995] [-v2001] [-sv] [-mixvlog] [-library <string>] [-netlist] [-define <string>]+ [<string>+] [-f <string>]
+
+    [-vhdl]:
+        specifies that HDL files are VHDL files 
+    [-v1995]:
+        specifies that HDL files conform to Verilog-1995 
+    [-v2001]:
+        specifies that HDL files conform to Verilog-2001 (default) 
+    [-sv]:
+        specifies that HDL files conform to SystemVerilog P1800 
+    [-mixvlog]:
+        specifies file extension based Verilog version detection 
+    [-library <string>]:
+        specifies the name of a VHDL or Verilog library 
+    [-netlist]:
+        specifies that HDL files conform to structural Verilog-1995 and is intended to be used in mixed input elaboration mode 
+    [-define <string>]:
+        defines Verilog macro 
+    [<string>+]:
+        the name of the HDL files to read 
+    [-f <string>]:
+        the name of list file for reading files from simulation environment 
+legacy_genus:/> elaborate -help
+  elaborate: elaborates previously read HDL files and creates corresponding design and subdesigns 
+
+Usage: elaborate [-parameters <string>] [-libpath <string>]+ [-libext <string>]+ [<string>+]
+
+    [-parameters <string>]:
+        specifies a list of parameter/value pairs for top-level Verilog module or VHDL entity. For example, elab -parameters {{width 5} {depth 10}} 
+    [-libpath <string>]:
+        defines Verilog library search path 
+    [-libext <string>]:
+        defines Verilog library file extension 
+    [<string>+]:
+        the top-level Verilog modules or VHDL architectures to elaborate 
+legacy_genus:/> source genus.tcl
+Sourcing './genus.tcl' (Fri Jun 26 23:49:54 -03 2020)...
+  Setting attribute of root '/': 'lib_search_path' = /home/Mateus/workspace/UFMG_digital_design/generic_components/rtl
+Freeing libraries in memory ( tutorial.lib )
+
+Info    : Created nominal operating condition. [LBR-412]
+        : Operating condition '_nominal_' was created for the PVT values (1.000000, 5.000000, 25.000000) in library 'tutorial.lib'.
+  Setting attribute of root '/': 'library' =  tutorial.lib 
+Error   : Cannot build an HDL design with generics that lack a default value. [CDFG-216] [elaborate]
+        : Design 'sync_ld_dff'.
+        : Specify a default value for the generic in the HDL.
+Warning : No top-level HDL designs to process.  [CDFG-304]
+        : .
+1
+legacy_genus:/> elaborate -help
+  elaborate: elaborates previously read HDL files and creates corresponding design and subdesigns 
+
+Usage: elaborate [-parameters <string>] [-libpath <string>]+ [-libext <string>]+ [<string>+]
+
+    [-parameters <string>]:
+        specifies a list of parameter/value pairs for top-level Verilog module or VHDL entity. For example, elab -parameters {{width 5} {depth 10}} 
+    [-libpath <string>]:
+        defines Verilog library search path 
+    [-libext <string>]:
+        defines Verilog library file extension 
+    [<string>+]:
+        the top-level Verilog modules or VHDL architectures to elaborate 
+legacy_genus:/> source genus.tcl
+Sourcing './genus.tcl' (Fri Jun 26 23:51:37 -03 2020)...
+  Setting attribute of root '/': 'lib_search_path' = /home/Mateus/workspace/UFMG_digital_design/generic_components/rtl
+Freeing libraries in memory ( tutorial.lib )
+
+Info    : Created nominal operating condition. [LBR-412]
+        : Operating condition '_nominal_' was created for the PVT values (1.000000, 5.000000, 25.000000) in library 'tutorial.lib'.
+  Setting attribute of root '/': 'library' =  tutorial.lib 
+entity sync_ld_dff is
+|
+Warning : Replacing existing design unit. [VHDLPT-800]
+        : Unit 'default:sync_ld_dff' in file 'sync_ld_dff.vhd' on line 5, column 1.
+        : A previously analyzed unit is being replaced.
+Warning : Marking out-of-date unit as invalid. [VHDLPT-801]
+        : Unit 'default:sync_ld_dff-bh_reg' depends on overwritten unit 'default:sync_ld_dff'.
+        : A unit is considered out-of-date when a unit that it depends on is re-analyzed.
+Warning : Replacing previously read Verilog module or VHDL entity. [HPT-76]
+        : Replacing VHDL entity 'sync_ld_dff' in library 'default' with newly read VHDL entity 'sync_ld_dff' in the same library in file 'sync_ld_dff.vhd' on line 5.
+        : A newly read VHDL entity replaces any previously read Verilog module or VHDL entity in the same library if its name matches (case-insensitively) the existing module or entity.
+    For instance:
+        VHDL 'foo'                  replaces  VHDL {'FOO' or 'foo' or 'Foo' or ...} in the same library
+        VHDL 'foo' (in any library) replaces  Verilog {'FOO' or 'foo' or 'Foo' or ...} in the same library
+ 
+A newly read Verilog module replaces any previously read Verilog module if its name matches (case-sensitively) that module.  Further, it replaces any previously read VHDL entity in the same library if its name matches (case -insensitively) that entity.
+    For instance:
+        Verilog 'foo' replaces    VHDL {'FOO' or 'foo' or 'Foo' or ...} in the same library
+        Verilog 'foo' replaces    Verilog 'foo' only
+    In addition:
+        Verilog 'foo' does not replace Verilog 'FOO' and the two remain as distinct modules.
+Info    : Elaborating Design. [ELAB-1]
+        : Elaborating top-level block 'sync_ld_dff' from file 'sync_ld_dff.vhd'.
+Info    : Binding to architecture. [ELAB-5]
+        : Elaborating architecture 'bh_reg' for entity 'sync_ld_dff'.
+Warning : Using default parameter value for module elaboration. [CDFG-818]
+        : Elaborating block 'sync_ld_dff' with default parameters value.
+Info    : Done Elaborating Design. [ELAB-3]
+        : Done elaborating 'sync_ld_dff'.
+Checking for analog nets...
+Check completed for analog nets.
+Checking for source RTL...
+Check completed for source RTL.
+/designs/sync_ld_dff
+legacy_genus:/> exit
+Normal exit.

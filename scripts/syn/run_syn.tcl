@@ -77,8 +77,8 @@ proc generate_report_line {param project_name project_path script_path} {
     unload_report
 }
 
-proc run_syn {project_name project_path script_path} {
-    source get_parameters.tcl
+proc run_syn {project_name project_path script_path get_param_path} {
+    source $get_param_path/get_parameters.tcl
     foreach param [get_parameters] {
         quartus_set_parameters $param
         

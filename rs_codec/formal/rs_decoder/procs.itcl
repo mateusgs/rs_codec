@@ -1,0 +1,295 @@
+#Checks for consumprion mechanism in rs_decoder. Related registers in chien-forney unit should be stable
+#when i_consume is deasserted
+proc rs_decoder_consume_checks {} {
+    task -create consume -set
+    assert {not i_consume and o_valid |=> $past(DUT.RS_CHIEN_FORNEY_INST.RS_CHIEN_INST.r_flop) = DUT.RS_CHIEN_FORNEY_INST.RS_CHIEN_INST.r_flop or o_error}
+    cover {not i_consume and o_valid |=> $past(DUT.RS_CHIEN_FORNEY_INST.RS_CHIEN_INST.r_flop) = DUT.RS_CHIEN_FORNEY_INST.RS_CHIEN_INST.r_flop or o_error}
+    assert {not i_consume and o_valid |=> $past(DUT.RS_CHIEN_FORNEY_INST.RS_FORNEY_INST.r_flop) = DUT.RS_CHIEN_FORNEY_INST.RS_FORNEY_INST.r_flop or o_error}
+    cover {not i_consume and o_valid |=> $past(DUT.RS_CHIEN_FORNEY_INST.RS_FORNEY_INST.r_flop) = DUT.RS_CHIEN_FORNEY_INST.RS_FORNEY_INST.r_flop or o_error}
+    assert {not i_consume and o_valid |=> $past(DUT.w_symbol_fifo_output) = DUT.w_symbol_fifo_output or o_error}
+    cover {not i_consume and o_valid |=> $past(DUT.w_symbol_fifo_output) = DUT.w_symbol_fifo_output or o_error}
+    prove -task consume
+    check_return {get_property_list -include {status {cex unreachable}} -task consume} {}
+}
+
+#Checks for stall mechanisms in rs_decoder. It happens when it started to receive a codeword 
+#and i_valid goes to '0' in some cycle before the codeword ends.
+proc rs_decoder_stall_checks {two_times_t} {
+    task -create stall -set
+    #check counter for number of elements
+    cover {not DUT.i_valid and \
+           (DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = START_SYNDROME or \
+            DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = COMPUTE_SYNDROME or DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = STALL)}
+    assert {not DUT.i_valid and (DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = START_SYNDROME or \
+            DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = COMPUTE_SYNDROME or \
+            DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = STALL) \
+            |=> $stable(DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_counter)}
+    for {set i 0} {$i < $two_times_t} {incr i} {
+        set CMD "assert \{not DUT.i_valid and (DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = START_SYNDROME or \
+                                     DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = COMPUTE_SYNDROME or \
+                                     DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = STALL) |=> ##1 \
+                                     \$stable(DUT.RS_SYNDROME_INST.RS_SYNDROME_UNIT_INST.GEN_RS_SYNDROME_UNIT($i).RS_SYNDROME_SUBUNIT_INST.r_dff)\}"
+        eval $CMD
+    }
+    prove -task stall
+    check_return {get_property_list -include {status {cex unreachable}} -task stall} {}
+}
+
+proc rs_decoder_reset_checks {number_of_symbols two_times_t} {
+    #SYNDROME CHECKERS
+    task -create reset -set
+    ##It guarantees the a new codeword resets internal registers at sydrome unit. 
+    for {set i 0} {$i < $two_times_t} {incr i} {
+        #TODO: replace r_state by the interface scenario that drives to the selected states
+        set CMD "assert \{DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = START_SYNDROME or 
+                          DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = REGISTER_RESULT |-> 
+                          DUT.RS_SYNDROME_INST.RS_SYNDROME_UNIT_INST.GEN_RS_SYNDROME_UNIT($i).RS_SYNDROME_SUBUNIT_INST.w_feedback = \$past(DUT.i_symbol)\}"
+        eval $CMD
+    }
+    ##Guarantees r_counter reset.
+    #TODO: replace r_state by the interface scenario that drives to the selected states
+    assert {DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = START_SYNDROME ##1
+            DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = COMPUTE_SYNDROME |-> 
+            DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_counter = 1}
+    assert {DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = REGISTER_RESULT ##1
+            DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = COMPUTE_SYNDROME |-> 
+            DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_counter = 1}
+    #BM Checkers
+    set t_minus_one [expr {$two_times_t/2 - 1}]
+    set CMD "assert \{DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_CONTROL_INST.r_state = END_BM ##1\
+           (DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_CONTROL_INST.r_state = START_BM\
+            or DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_CONTROL_INST.r_state = WAIT_FOR_SYNDROME) |->\
+            DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.r_syndrome = \$past(DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.i_syndrome)\
+            and DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.r_first_syndrome = 0\
+            and DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.r_syndrome_shifter = 0\
+            and DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.r_2l = 0\
+            and DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.r_discrepancy = 1\
+            and DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.r_connection_shifter($t_minus_one) = 1 \
+            and DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.r_location_poly = 0\
+            and DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.r_value_poly = 0\}"
+    #TODO: DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.r_connection_shifter missing check for zero values
+    eval $CMD
+
+    assert {DUT.RS_CHIEN_FORNEY_INST.RS_CHIEN_FORNEY_CONTROL_INST.r_state = (WAIT_FOR_EUCLIDEAN_TERMS or (END_CHIEN_FORNEY and i_consume)) |->\
+            DUT.RS_CHIEN_FORNEY_INST.RS_CHIEN_INST.w_selector = DUT.RS_CHIEN_FORNEY_INST.RS_CHIEN_INST.i_terms}
+    assert {DUT.RS_CHIEN_FORNEY_INST.RS_CHIEN_FORNEY_CONTROL_INST.r_state = (WAIT_FOR_EUCLIDEAN_TERMS or (END_CHIEN_FORNEY and i_consume)) |->\
+            DUT.RS_CHIEN_FORNEY_INST.RS_FORNEY_INST.w_selector = DUT.RS_CHIEN_FORNEY_INST.RS_FORNEY_INST.i_terms}
+
+    prove -task reset
+    check_return {get_property_list -include {status {cex unreachable}} -task reset} {}
+}
+
+proc add_helper_assertions {number_of_symbols N two_times_t max_errors} {
+    #SYNDROME HELPERS
+    #Modelling of w_syndrome_valid
+    set num_cycles_not_i_valid [expr {$number_of_symbols + 1}]
+    set CMD "assert \{DUT.i_start_codeword |-> not DUT.w_syndrome_valid \[*$num_cycles_not_i_valid\] ##1 DUT.w_syndrome_valid ##1 not DUT.w_syndrome_valid\}"
+    eval $CMD
+
+    assert {DUT.w_syndrome_valid and DUT.w_syndrome_fifo_input = 0 |-> DUT.w_chien_fifo_input = 0 and DUT.w_forney_fifo_input = 0}
+
+    #Modelling of w_wr_symbol
+    set CMD "assert \{DUT.i_start_codeword |=> DUT.w_wr_symbol \[*$number_of_symbols\] ##1 not DUT.w_wr_symbol\}"
+    eval $CMD
+    
+    #Modelling of w_wr_number_of_symbols
+    set CMD "assert \{DUT.i_start_codeword |-> not DUT.w_wr_number_of_symbols \[*$number_of_symbols\] ##1 DUT.w_wr_number_of_symbols ##1 not DUT.w_wr_number_of_symbols\}"
+    eval $CMD
+
+    #FIFO Available when SYNDROME is ready
+    assert {DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = REGISTER_RESULT |-> not DUT.w_syndrome_fifo_full and DUT.w_syndrome_fifo_empty}
+    cover {DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state = REGISTER_RESULT}
+
+    #There is only one codeword
+    assert {DUT.o_in_ready}
+    #No interface errors
+    assert {not DUT.RS_SYNDROME_INST.o_error}
+    #No stall
+    assert {DUT.RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.r_state /= STALL}
+
+    #SYNDROME FIFO HELPERS
+    assert {not DUT.w_syndrome_fifo_empty = DUT.w_syndrome_fifo_full}
+    set num_cycles_syndrome_fifo_empty [expr {$number_of_symbols + 2}]
+    set CMD "assert \{DUT.i_start_codeword |-> DUT.w_syndrome_fifo_empty \[*$num_cycles_syndrome_fifo_empty\] ##1 not DUT.w_syndrome_fifo_empty \[*2\] ##1 DUT.w_syndrome_fifo_empty\}"
+    eval $CMD
+
+    #BM HELPERS
+    #number of cycles until get the result of BM.
+    #Syndrome: 1 cycle (WAIT) + $N + 1 register_result
+    #FIFO progation: 1 cycle
+    #BM: 1 cycle (WAIT) + 2*two_times_t
+    set num_cycles_BM_not_ready [expr {$number_of_symbols + 2*$two_times_t + 4}]
+    set CMD "assert \{DUT.i_start_codeword |-> not DUT.w_wr_bm \[*$num_cycles_BM_not_ready\] ##1 DUT.w_wr_bm ##1 not DUT.w_wr_bm\}"
+    eval $CMD
+
+    #N da cover!!!
+    assert {DUT.w_chien_fifo_input = 0 and DUT.w_forney_fifo_input = 0 and DUT.w_wr_bm ##0 DUT.o_valid |-> DUT.w_symbol_correction = 0}
+
+    #number of cycles until syndrome is cleared to compute value poly
+    set num_cycles_syndrome_not_cleared [expr {$number_of_symbols + $two_times_t + 4}]
+    set CMD "assert \{DUT.i_start_codeword |-> not DUT.RS_BERLEKAMP_MASSEY_INST.w_clear_syn  \[*$num_cycles_syndrome_not_cleared\] ##1 DUT.RS_BERLEKAMP_MASSEY_INST.w_clear_syn ##1 not DUT.RS_BERLEKAMP_MASSEY_INST.w_clear_syn\}"
+    eval $CMD
+    
+    set CMD "assert \{DUT.RS_BERLEKAMP_MASSEY_INST.w_clear_syn |=> \$stable(DUT.RS_BERLEKAMP_MASSEY_INST.o_locator_poly) \[*$two_times_t\]\}"
+    eval $CMD
+
+    #Syndrome is only read once
+    #"+3": WAIT_SYNDROME + REGISTER_SYNDROME + FIFO_PROPAGATION
+    set num_cycles_BM_not_ready [expr {$number_of_symbols + 3}]
+    set CMD "assert \{DUT.i_start_codeword |-> not DUT.w_rd_syndrome \[*$num_cycles_BM_not_ready\] ##1 DUT.w_rd_syndrome ##1 not DUT.w_rd_syndrome\}"
+    eval $CMD
+
+    assert { not DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.SYNDROME_SHIFTER.rst |=> \
+             DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.SYNDROME_SHIFTER.w_array(0) = \
+             DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.SYNDROME_SHIFTER.i_first_input}
+        
+    set t_minus_one [expr {$two_times_t/2 - 1}]
+    for {set i 1} {$i < $t_minus_one} {incr i} {
+        set i_minus_one [expr {$i - 1}]
+        set CMD "assert \{not DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.SYNDROME_SHIFTER.rst |=> \
+                              DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.SYNDROME_SHIFTER.w_array($i) = \
+                              DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.SYNDROME_SHIFTER.w_array($i_minus_one)\}"
+        eval $CMD
+    }
+    assert {not DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.rst\
+            and DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.i_load_input_array |=>\
+            DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.r_array =\
+            $past(DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.i_array)}
+
+    set CMD "assert \{ not DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.rst and\
+                      not DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.i_load_input_array |=>\
+                      DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.r_array(0) =\
+                      \$past(DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.i_array($t_minus_one))\}"
+    for {set i 1} {$i < $t_minus_one} {incr i} {
+        set i_minus_one [expr {$i - 1}]
+        set CMD "assert \{ not DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.rst and \
+                 not DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.i_load_input_array |=> \
+                 DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.r_array($i) = \
+                 \$past(DUT.RS_BERLEKAMP_MASSEY_INST.RS_BERLEKAMP_MASSEY_UNIT_INST.T_GREATER_THAN_ONE.CONNECTION_SHIFTER.i_array($i_minus_one)) \}"
+        eval $CMD
+    }
+
+    #CHIEN FORNEY HELPERS
+    #Modelling DUT.o_start_codeword
+    set num_cycles_o_start_codeword [expr {$number_of_symbols + 2*$two_times_t + + 4 + 3 + $N - $number_of_symbols}]
+    set CMD "assert \{DUT.i_start_codeword |-> not DUT.o_start_codeword \[*$num_cycles_o_start_codeword\] ##1 DUT.o_start_codeword ##1 not DUT.o_start_codeword\}"
+    eval $CMD
+    
+    #Modelling DUT.o_end_codeword
+    set num_cycles_o_end_codeword [expr {$number_of_symbols + 2*$two_times_t + + 4 + 3 + $N - $number_of_symbols + $number_of_symbols - 1}]
+    set CMD "assert \{DUT.i_start_codeword |-> not DUT.o_end_codeword \[*$num_cycles_o_end_codeword\] ##1 DUT.o_end_codeword ##1 not DUT.o_end_codeword\}"
+    eval $CMD
+
+
+    #Add embedded propeties
+    task -edit formal -copy_asserts -source <constraints>
+    task -edit formal -copy_asserts -source <embedded>
+    task -edit formal -copy_asserts -source stall
+    task -edit formal -copy_asserts -source reset
+
+
+}
+
+proc rs_decoder_codeword_check {N K two_times_t mode} {
+    set max_errors [expr {$two_times_t/2}]
+    task -create formal -set
+    assume i_consume
+    set total_bound [expr {$N + 2*$two_times_t + + 4 + 3 + $N - $N + $N + 1}]
+    if {$mode == "disturber"} {
+        set CMD "assert \{o_valid and o_error_counter <= $max_errors |->  not o_fifo_xor_decoder_symbol\} -name golden_requirement"
+        eval $CMD
+        assert -set_target_bound $total_bound {golden_requirement} -regexp
+        add_encoder_codeword_constrains $K
+    } elseif {$mode == "syndrome"} {
+        add_decoder_codeword_constrains $N
+    }
+    #TODO: Enable helper assertions
+    #add_helper_assertions $N $N $two_times_t $max_errors
+
+    if {$mode == "disturber"} {
+	puts "Disturber does not have formal checks!!!"
+	stop_script
+    } elseif {$mode == "syndrome"} { 
+    set t [expr {($N - $K)/2}]
+    set CMD "cover \{o_syndrome = 0 and o_valid and w_error_counter <= $t |-> w_original_symbol = o_symbol\} -name formal_req_cov_0"
+    eval $CMD
+    set CMD "cover \{o_syndrome = 0 and o_valid and w_error_counter <= $t \} -name formal_req_cov_1"
+   
+    #TODO: Enable stall checks and reset checks
+    #prove -task stall
+    #prove -task reset
+    prove -task formal
+
+    foreach prop [get_property_list -include {type {assert} status proven} -task formal] {assume -from_assert $prop}
+    assert {o_syndrome = 0 and o_valid and w_error_counter <= 2 |-> w_original_symbol = o_symbol} -name formal_req
+    eval $CMD
+    if {$N == 15 && $K == 11} {
+        set_prove_target_bound 45
+        set_max_trace_length 45
+    }
+    if {$N == 15 && $K == 7} {
+        set_prove_target_bound 52
+        set_max_trace_length 52
+    }    
+    if {$N == 7 && $K == 5} {
+        set_prove_target_bound 27
+        set_max_trace_length 27
+    }    
+    if {$N == 7 && $K == 3} {
+        set_prove_target_bound 30
+        set_max_trace_length 30
+    }    
+    if {$N == 7 && $K == 1} {
+        set_prove_target_bound 33
+        set_max_trace_length 33
+    }    
+    if {$N == 64} {
+        set_prove_target_bound 376
+        set_max_trace_length 376
+    }
+    if {$N == 160} {
+        set_prove_target_bound 472
+        set_max_trace_length 472
+    }
+    set_proof_time_limit 200h
+    prove -property formal_req -bg
+    prove -add Tri
+    check_return {get_property_list -include {status {cex unreachable}} -task formal} {}
+    }
+}
+
+proc add_encoder_codeword_constrains {number_of_symbols} {
+    assume -bound 1 i_encoder_start_codeword
+    assume {i_encoder_start_codeword |=> not (i_encoder_start_codeword)}
+    assume {not (i_encoder_start_codeword) |=> not (i_encoder_start_codeword)}
+    
+    set num_cycles_not_end_codeword [expr {$number_of_symbols - 1}]
+    set CMD "assume \{i_encoder_start_codeword |-> not i_encoder_end_codeword \[*$num_cycles_not_end_codeword\] ##1 i_encoder_end_codeword\}"
+    eval $CMD
+
+    set num_cycles_valid [expr {$number_of_symbols}]
+    set CMD "assume \{i_encoder_start_codeword |-> i_encoder_valid \[*$num_cycles_valid\]\}"
+    eval $CMD
+
+    assume {i_encoder_end_codeword |=> not (i_encoder_valid)}
+    assume {not (i_encoder_valid) |=> not (i_encoder_valid)}
+
+    assert {not RS_ENCODER_INST.w_error}
+}
+
+proc add_decoder_codeword_constrains {number_of_symbols} {
+    assume -bound 1 i_start_codeword
+    assume {i_start_codeword |=> not (i_start_codeword)}
+    assume {not (i_start_codeword) |=> not (i_start_codeword)}
+    
+    set num_cycles_not_end_codeword [expr {$number_of_symbols - 1}]
+    set CMD "assume \{i_start_codeword |-> not i_end_codeword \[*$num_cycles_not_end_codeword\] ##1 i_end_codeword\}"
+    eval $CMD
+
+    set num_cycles_valid [expr {$number_of_symbols}]
+    set CMD "assume \{i_start_codeword |-> i_valid \[*$num_cycles_valid\]\}"
+    eval $CMD
+
+    assume {i_end_codeword |=> not (i_valid)}
+    assume {not (i_valid) |=> not (i_valid)}
+}
