@@ -1,0 +1,167 @@
+proc get_parameters {} {
+    #return {{15 2 RS_GF_16} {15 4 RS_GF_16} {15 7 RS_GF_16} {15 11 RS_GF_16} {64 32 RS_GF_256} {160 128 RS_GF_256}}
+    return {{15 11 RS_GF_16}}
+    #return {{7 3 RS_GF_8}}
+}
+
+proc get_requirements {} {
+# This dict will be resposible for maintaining all information related to 
+# the requirements of the rs_decoder
+set rs_decoder_requirements [dict create]
+
+# REQ_RS_DEC_000: behavior after reset
+dict set rs_decoder_requirements REQ_RS_DEC_000 description\
+"REQ_RS_DEC_000: Reset signal is represented by 'rst', and is an active high pin and asynchronous\
+ Also, outputs should be zero after 1 cycle of reset."
+
+# REQ_RS_DEC_001: "i_end_codeword" without a valid "i_start_codeword" before.
+dict set rs_decoder_requirements REQ_RS_DEC_001 description\
+"REQ_RS_DEC_001: If a valid i_end_codeword (i_valid and i_end_codeword) occurs without any previous valid\
+starting input codeword signaling, o_error shall be asserted to error in the next cycle of this event. This check\
+is valid only when rs_decoder is ready to receive input symbols (o_in_ready)."
+
+# REQ_RS_DEC_002: 2 valid "i_start_codeword" without a valid "i_end_codeword" in between.
+dict set rs_decoder_requirements REQ_RS_DEC_002 description\
+"REQ_RS_DEC_002: If rs_decoder receives two valid input codeword starting indication (i_valid and i_start_codeword)\
+ without an valid input codeword ending indication (i_valid and i_end_codeword) in between, o_error is asserted in\ 
+ the subsequence cycle of this condition. This check is valid only when rs_decoder is ready to receive input symbols\
+ (o_in_ready)."
+
+#The requirements below are redundant. It is also covered by REQ_RS_DEC_001 and REQ_RS_DEX_002 
+## REQ_RS_DEC_003: 2 valid "i_end_codeword" without a valid "i_start_codeword" in between.
+#dict set rs_decoder_requirements REQ_RS_DEC_003 description\
+#"REQ_RS_DEC_003: If rs_decoder receives two valid input codeword endind indication (i_valid and i_end_codeword)\
+# without an valid input codeword ending indication (i_valid and i_end_codeword) in between, o_error is asserted in\ 
+# the subsequent cycle of this condition. This check is valid only when rs_decoder is ready to receive input symbols\
+# (o_in_ready)."
+#
+## REQ_RS_DEC_004: Invalid combination of values 
+#dict set rs_decoder_requirements REQ_RS_DEC_004 description\
+#"REQ_RS_DEC_004: Valid starting codeword reference should be interleaved with end codeword reference.\
+# If 'i_start_codeword and i_valid' are output twice without a 'i_end_codeword and i_valid' in between,\
+# o_error shall be '1' one cycle after. This check is valid only when rs_decoder is ready to receive input\
+# symbols (o_in_ready)."
+
+# REQ_RS_DEC_003: missing i_end_codeword
+dict set rs_decoder_requirements REQ_RS_DEC_003 description\
+"REQ_RS_DEC_003: Once a valid input starting codeword occurs (i_start_codeword and i_valid), a valid input ending\
+ codeword signaling (i_valid and i_end_codeword) must happen after N cycles. Otherwise, o_error shall be asserted\
+ to '1' one cycle after. This check is valid only when rs_decoder is ready to receive input symbols (o_in_ready)."
+
+# REQ_RS_DEC_004: o_error behavior
+dict set rs_decoder_requirements REQ_RS_DEC_004 description\
+"REQ_RS_DEC_004: If o_error is stuck at '1', the only way deassert it is to reset the block (rst)."
+
+# REQ_RS_DEC_005: sending output codeword
+dict set rs_decoder_requirements REQ_RS_DEC_005 description\
+"REQ_RS_DEC_005: When the first valid symbol is output (o_start_codeword and o_valid), o_valid must continue\ 
+ asserted for *at least* N-K-2 cycles in a row. Then, the last output codeword symbol is indicated by o_end_codeword\
+ (o_valid and o_end_codeword) in the Nth cycle. Actually, the number of valid cycles beetween o_start_codeword and o_end_codeword\
+ should be same as the number of valid cycle between i_start_codeword and i_end_codeword of the respective codeword."
+
+# REQ_RS_DEC_006: output codeword starting cannot happen without any previous valid input codeword ending
+dict set rs_decoder_requirements REQ_RS_DEC_006 description\
+"REQ_RS_DEC_006: output codeword starting (o_valid and o_start_codeword) cannot happen without any previous\
+ valid input codeword ending (i_valid and i_end_codeword)"
+
+# REQ_RS_DEC_007: validity of output control signals
+dict set rs_decoder_requirements REQ_RS_DEC_007 description\
+"REQ_RS_DEC_007: The duration of o_end_codeword and o_start_codeword must take only one cycle. Also, they\
+ only can be asserted when o_valid is asserted as well."
+
+# REQ_RS_DEC_008: correctness of output codeword (The golden requirement)
+dict set rs_decoder_requirements REQ_RS_DEC_008 description\
+"REQ_RS_DEC_008: The original message shall be recovered if the number of corrupted symbols is not greater than (N - K)/2."
+}
+
+proc create_properties {requirements type $num_parity} {
+    task -create $type -set
+    if {$type == "reset"} {
+        # Asserts 
+        set check_properties []
+        set check_properties [linsert $check_properties end [assert {rst |=> not(o_error)} -name REQ_RS_DEC_000.CHECK.01]]
+        set check_properties [linsert $check_properties end [assert {rst |=> not(o_valid)} -name REQ_RS_DEC_000.CHECK.02]]
+        set check_properties [linsert $check_properties end [assert {rst |=> not(RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.o_wr_number_of_symbols)} -name REQ_RS_DEC_000.CHECK.03]]
+        set check_properties [linsert $check_properties end [assert {rst |=> not(RS_SYNDROME_INST.o_wr_symbol)} -name REQ_RS_DEC_000.CHECK.04]]
+        set check_properties [linsert $check_properties end [assert {rst |=> not(RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.o_number_of_symbols)} -name REQ_RS_DEC_000.CHECK.05]]
+        set check_properties [linsert $check_properties end [assert {rst |=> not(RS_SYNDROME_INST.o_syndrome)} -name REQ_RS_DEC_000.CHECK.06]]
+        dict set requirements REQ_RS_DEC_000 checks $check_properties
+
+        set check_properties []
+        set check_properties [linsert $check_properties end [assert {rst|-> not(o_error)} -name REQ_RS_DEC_004.CHECK.01]]
+        set check_properties [linsert $check_properties end [assert {o_error and not(rst)|-> o_error} -name REQ_RS_DEC_004.CHECK.02]]
+        dict set requirements REQ_RS_DEC_004 checks $check_properties
+        # Covers
+        set cover_properties []
+        set cover_properties [linsert $check_properties end [cover {rst |=> not(o_error)} -name REQ_RS_DEC_000.COVER.01]]
+        set cover_properties [linsert $check_properties end [cover {rst |=> not(o_valid)} -name REQ_RS_DEC_000.COVER.02]]
+        set cover_properties [linsert $check_properties end [cover {rst |=> not(RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.o_wr_number_of_symbols)} -name REQ_RS_DEC_000.COVER.03]]
+        set cover_properties [linsert $check_properties end [cover {rst |=> not(RS_SYNDROME_INST.o_wr_symbol)} -name REQ_RS_DEC_000.COVER.04]]
+        set cover_properties [linsert $check_properties end [cover {rst |=> not(RS_SYNDROME_INST.RS_SYNDROME_CONTROL_INST.o_number_of_symbols)} -name REQ_RS_DEC_000.COVER.05]]
+        set cover_properties [linsert $check_properties end [cover {rst |=> not(RS_SYNDROME_INST.o_syndrome)} -name REQ_RS_DEC_000.COVER.06]]
+        dict set requirements REQ_RS_DEC_000 covers $cover_properties
+
+        set cover_properties []
+        set cover_properties [linsert $check_properties end [cover {rst |-> not(o_error)} -name REQ_RS_DEC_004.COVER.01]]
+        set cover_properties [linsert $check_properties end [cover {o_error and not(rst) |-> o_error} -name REQ_RS_DEC_004.COVER.02]]
+        dict set requirements REQ_RS_DEC_004 covers $cover_properties
+
+    } elseif {$type == "protocol"}  {
+        # Asserts 
+        set check_properties []
+        set check_properties [linsert $check_properties end [assert {o_in_ready and not(mod2.i_sending_codeword) and i_end_codeword and not(i_start_codeword) and i_valid|=> o_error} -name REQ_RS_DEC_001.CHECK.01]]
+        dict set requirements REQ_RS_DEC_001 checks $check_properties
+
+        set check_properties []
+        set check_properties [linsert $check_properties end [assert {o_in_ready and mod2.i_sending_codeword and i_start_codeword and i_valid |=> o_error} -name REQ_RS_DEC_002.CHECK.01]]
+        dict set requirements REQ_RS_DEC_002 checks $check_properties
+
+        set check_properties []
+        set check_properties [linsert $check_properties end [assert {o_in_ready and mod2.i_sending_codeword and i_valid and not(i_start_codeword) and not(i_end_codeword) [*N-1]|=> o_error} -name REQ_RS_DEC_003.CHECK.01]]
+        dict set requirements REQ_RS_DEC_003 checks $check_properties
+     
+        set check_properties []
+        set check_properties [linsert $check_properties end [assert {o_end_codeword and not o_error and i_consume |-> mod2.o_count=mod2.counter_out-1} -name REQ_RS_DEC_005.CHECK.01]]
+        dict set requirements REQ_RS_DEC_005 checks $check_properties
+
+        set check_properties []
+        set check_properties [linsert $check_properties end [assert {mod2.o_sending_codeword and o_valid and $past(i_consume) |-> not(o_start_codeword and o_valid)} -name REQ_RS_DEC_006.CHECK.01]]
+        dict set requirements REQ_RS_DEC_006 checks $check_properties
+
+        set check_properties []
+        set check_properties [linsert $check_properties end [assert {o_end_codeword and o_valid and i_consume |=> not o_end_codeword} -name REQ_RS_DEC_007.CHECK.02]]
+        set check_properties [linsert $check_properties end [assert {o_start_codeword and o_valid and i_consume |=> not o_start_codeword} -name REQ_RS_DEC_007.CHECK.03]]
+        dict set requirements REQ_RS_DEC_007 checks $check_properties
+
+
+        # Covers
+        set cover_properties []
+        set cover_properties [linsert $cover_properties end [cover  {o_in_ready and not(mod2.i_sending_codeword) and i_end_codeword and not(i_start_codeword) and i_valid|=> o_error} -name REQ_RS_DEC_001.COVER.01]]
+        dict set requirements REQ_RS_DEC_001 covers $cover_properties
+
+        set cover_properties []
+        set cover_properties [linsert $cover_properties end [cover  {o_in_ready and mod2.i_sending_codeword and i_start_codeword and i_valid |=> o_error}  -name REQ_RS_DEC_002.COVER.01]]
+        dict set requirements REQ_RS_DEC_002 covers $cover_properties
+
+        set cover_properties []
+        set cover_properties [linsert $cover_properties end [cover {o_in_ready and mod2.i_sending_codeword and i_valid and not(i_start_codeword) and not(i_end_codeword) [*N-1]|=> o_error}  -name REQ_RS_DEC_003.COVER.01]]
+        dict set requirements REQ_RS_DEC_003 covers $cover_properties
+
+        set cover_properties []
+        set cover_properties [linsert $cover_properties end [cover {o_end_codeword and not o_error |=> mod2.o_count=$past(mod2.counter_out,2)} -name REQ_RS_DEC_005.COVER.01]]
+        dict set requirements REQ_RS_DEC_005 covers $cover_properties
+
+        set cover_properties []
+        set cover_properties [linsert $cover_properties end [cover {mod2.o_sending_codeword and o_valid |-> not(o_start_codeword and o_valid)} -name REQ_RS_DEC_006.COVER.01]]
+        dict set requirements REQ_RS_DEC_006 covers $cover_properties
+
+        set cover_properties []
+        set cover_properties [linsert $cover_properties end [cover {o_end_codeword and o_valid |=> not o_end_codeword} -name REQ_RS_DEC_007.COVER.02]]
+        set cover_properties [linsert $cover_properties end [cover {o_start_codeword and o_valid |=> not o_start_codeword} -name REQ_RS_DEC_007.COVER.03]]
+        dict set requirements REQ_RS_DEC_007 covers $cover_properties
+
+    } elseif {$type == "functional"} {
+    }
+
+    return $requirements
+}

@@ -1,0 +1,45 @@
+set_elaborate_single_run_mode off
+proc run_analyze {} {
+    analyze -vhdl08 -L GENERIC_TYPES ../../../generic_components/rtl/generic_types.vhd
+    analyze -vhdl08 -L GENERIC_FUNCTIONS ../../../generic_components/rtl/generic_functions.vhd
+    analyze -vhdl08 -L GENERIC_COMPONENTS ../../../generic_components/rtl/generic_components.vhd
+    analyze -vhdl08 -L RS_TYPES ../../rtl/rs_types.vhd
+    analyze -vhdl08 -L RS_CONSTANTS ../../rtl/rs_constants.vhd
+    analyze -vhdl08 -L RS_FUNCTIONS ../../rtl/rs_functions.vhd
+    analyze -vhdl08 -L RS_COMPONENTS ../../rtl/rs_components.vhd
+    analyze -vhdl08 -L RS_CONSTANTS ../../rtl/rs_constants.vhd
+    analyze -vhdl08 ../../rtl/rs_encoder.vhd\
+                    ../../../generic_components/rtl/async_dff.vhd\
+                    ../../rtl/rs_adder.vhd\
+                    ../../rtl/rs_multiplier_lut.vhd\
+                    ../../rtl/rs_multiplier.vhd\
+                    ../../rtl/rs_remainder_unit.vhd\
+		    ../../rtl/rs_syndrome.vhd\
+		    ../../rtl/rs_syndrome_subunit.vhd\
+		    ../../rtl/rs_encoder_wrapper.vhd
+
+    analyze -sv09	fv_encoder.sv
+}
+
+proc get_word_length_from_gf {RS_GF} {
+	if {$RS_GF == "RS_GF_8"} {
+		return 3;
+	} elseif {$RS_GF == "RS_GF_16"} {
+		return 4;
+	} elseif {$RS_GF == "RS_GF_32"} {
+		return 5;
+	} elseif {$RS_GF == "RS_GF_64"} {
+		return 6;
+	} elseif {$RS_GF == "RS_GF_128"} {
+		return 7;
+	} elseif {$RS_GF == "RS_GF_256"} {
+		return 8;
+	} 
+}
+
+proc run_design_compilation {N K RS_GF} {
+    clear -all
+    run_analyze
+    elaborate -vhdl -top rs_encoder_wrapper -parameter N $N -parameter K $K -parameter RS_GF $RS_GF
+    connect -bind -auto fv_encod mod2 -auto -elaborate -parameter N $N -parameter K $K -parameter WORD_LENGTH [get_word_length_from_gf $RS_GF]
+}
