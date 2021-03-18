@@ -40,6 +40,8 @@ sim - RTL simlulation scripts using Mentor ModelSim Student Edition \
 formal - Scripts for formal verification using Cadence JasperGold Apps \
 syn - Script for synthesis in FPGA using Quartus Prime Lite Edition 
 
-There is a paper that explain all nuances of this project. However, it has not been published yet. Meanwhile, I ask to contact matgonsil@gmail.com for any questions.
+There is a paper that explain all nuances of this project:
+https://ietresearch.onlinelibrary.wiley.com/doi/10.1049/cdt2.12009
 
 This project started at Universidade Federal de Minas Gerais (UFMG), and it is open for the community under the license "MIT".
+Contact matgonsil@gmail.com (Mateus Silva) for any questions.
