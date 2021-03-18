@@ -31,7 +31,7 @@ o_error - O - Error indicator \
 o_symbol - O - Output data symbol
 
 
-The top level .vhd files are: rs_decoder.vhd and rs_decoder
+The top level .vhd files are: rs_decoder.vhd and rs_encoder.vhd
 
 If you look the directory structure, inside the projects (rs_decoder and rs_encoder) there are four folders:
 
