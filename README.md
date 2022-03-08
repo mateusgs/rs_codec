@@ -1,5 +1,7 @@
 # rs_codec
 
+# If you already using this repo, see this patch: # https://github.com/mateusgs/rs_codec/commit/4ca278ca88efe6b2975cf8431e16ef8106898bb4
+
 This project comprises the RTL developement of a paramerizable RS Codec. It provides both RS encoder and decoder, and the following parameters that be adjusted in their instantiation.
 
 N - Length of the codeword (message) -  Range -> 2 to 1023
