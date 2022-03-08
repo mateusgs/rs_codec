@@ -24,6 +24,7 @@ rst - I - System reset pin \
 i_start_cw - I - Delimiter of input codeword start \
 i_end_cw - I - Delimiter of input codeword end \
 i_valid - I - Validity of input symbols \ 
+i_consume - I - Consumes output of the codec \
 i_symbol - I - Input data symbol \
 o_start_cw - O - Delimiter of output codeword starting \
 o_end_cw - O - Delimiter of output codeword ending \
