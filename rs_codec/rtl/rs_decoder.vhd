@@ -252,8 +252,9 @@ begin
                                      i_data => r_symbol,
                                      o_valid => r_o_cascade_valid,
                                      o_data => r_o_cascade_data);
+        --If "NUM_OF_ELEMENTS => N*5 + 2", fifo is never full
         SYMBOL_FIFO_INST : reg_fifo
-                           generic map(NUM_OF_ELEMENTS => N*3 + 2, 
+                           generic map(NUM_OF_ELEMENTS => N*5 + 1, 
                                        WORD_LENGTH => WORD_LENGTH,
                                        O_FULL_MINUS_ONE => true)
                            port map(clk => clk,
@@ -265,9 +266,10 @@ begin
                                     o_rd_data => w_symbol_fifo_output,
                                     o_empty => w_symbol_fifo_empty);
     end generate;
+    --If "NUM_OF_ELEMENTS => N*5 + 2", fifo is never full
     GEN_NO_PARITY_OUTPUT_TRUE: if OUTPUT_PARITY_SYMBOLS = true generate
         SYMBOL_FIFO_INST : reg_fifo
-                           generic map(NUM_OF_ELEMENTS => N*3 + 2, 
+                           generic map(NUM_OF_ELEMENTS => N*5 + 1, 
                                        WORD_LENGTH => WORD_LENGTH,
                                        O_FULL_MINUS_ONE => true)
                            port map(clk => clk,
@@ -278,7 +280,8 @@ begin
                                     i_rd_en => w_rd_symbol and not w_error,
                                     o_rd_data => w_symbol_fifo_output,
                                     o_empty => w_symbol_fifo_empty);
-    end generate;                            
+    end generate;               
+    --If "NUM_OF_ELEMENTS => 5", fifo is never full             
     NUMBER_OF_SYMBOLS_FIFO_INST : reg_fifo
                                   generic map(NUM_OF_ELEMENTS => 4, 
                                               WORD_LENGTH => WORD_LENGTH)

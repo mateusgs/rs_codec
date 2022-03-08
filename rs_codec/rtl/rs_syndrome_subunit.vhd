@@ -32,8 +32,12 @@ architecture behavioral of rs_syndrome_subunit is
     signal w_multiplier : std_logic_vector(WORD_LENGTH-1 downto 0);
 
     signal w_d_flop_loop_selector : std_logic_vector(WORD_LENGTH-1 downto 0);
-    --output D_FLOP_LOOP signals
+    --output LOOP_ASYNC_DFF signals
     signal r_dff : std_logic_vector(WORD_LENGTH-1 downto 0);
+
+    signal w_d_flop_output_selector : std_logic_vector(WORD_LENGTH-1 downto 0);
+    --output OUTPUT_ASYNC_DFF signals
+    signal r_syndrome : std_logic_vector(WORD_LENGTH-1 downto 0);
 begin
 	 assert (I <= 2**WORD_LENGTH-3) 
 		  report "ASSERT FAILURE - I <= 2**WORD_LENGTH-3 is not valid" 
@@ -61,10 +65,13 @@ begin
                               rst => rst,
                               d => w_d_flop_loop_selector,
                               q => r_dff);
+    w_d_flop_output_selector <= r_syndrome when (i_stall = '1')
+                                           else w_feedback; 
     OUTPUT_ASYNC_DFF: async_dff
                       generic map (WORD_LENGTH => WORD_LENGTH) 
                       port map (clk => clk,
                                 rst => rst,
-                                d => w_feedback,
-                                q => o_syndrome);
+                                d => w_d_flop_output_selector,
+                                q => r_syndrome);
+    o_syndrome <= r_syndrome;
 end behavioral;

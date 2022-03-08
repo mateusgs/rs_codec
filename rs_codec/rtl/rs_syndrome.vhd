@@ -295,8 +295,8 @@ begin
                 o_error <= '0';
                 w_o_in_ready <= not i_syndrome_fifo_full and not w_input_fifo_full; 
                 o_select_feedback <= '0';
-                o_stall <= i_syndrome_fifo_full;
-                o_valid <= not i_syndrome_fifo_full;
+                o_stall <= i_syndrome_fifo_full or w_input_fifo_full;
+                o_valid <= not i_syndrome_fifo_full and not w_input_fifo_full; 
                 o_wr_number_of_symbols <= '0';
                 if ((i_syndrome_fifo_full = '0') and (r_counter = 0) and (w_input_fifo_full = '0')) then
                     o_wr_symbol <= '1';
