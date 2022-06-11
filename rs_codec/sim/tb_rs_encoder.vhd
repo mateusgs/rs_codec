@@ -36,6 +36,7 @@ begin
                   i_end_codeword => i_end_codeword,
                   i_start_codeword => i_start_codeword,
                   i_valid => i_valid,
+                  i_consume => '1',
                   i_symbol => i_symbol,
                   o_start_codeword => o_start_codeword,
                   o_end_codeword => o_end_codeword,
