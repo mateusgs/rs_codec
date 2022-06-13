@@ -1,7 +1,7 @@
 import rs_helper_functions as rs
 
 def main():
-    generate_rs_constants_codeword(10)
+    generate_rs_constants_codeword(8)
 
 def generate_rs_constants_codeword(exp=10):
     f = open("rs_constants.vhd", "w+")
@@ -20,7 +20,7 @@ def generate_rs_constants_codeword(exp=10):
     f.write("\ttype INT_ARRAY is array (integer range <>) of integer;\n")
     
     primitive_polynomials = [0, 7, 11, 19, 37, 67, 131, 285, 529, 1033]
-
+    b = 0
     counter = 0
     array_positions = list()
     array_of_gen_poly = list()
@@ -29,7 +29,7 @@ def generate_rs_constants_codeword(exp=10):
         y = 1
         gen_poly = list()
         while (y < 2**x - 1):
-            gen_poly.append(rs.rs_generator_poly(y, 0, 2, primitive_polynomials[x-1], 2**x))
+            gen_poly.append(rs.rs_generator_poly(y, b, 2, primitive_polynomials[x-1], 2**x))
             y += 1
             counter += 1
         array_of_gen_poly.append(gen_poly)

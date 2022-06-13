@@ -54,10 +54,12 @@ def gf_poly_mul_simple(p, q, prim=0, field=1024): # simple equivalent way of mul
             r[i + j] ^= gf_mult_noLUT(p[i], q[j], prim, field) # equivalent to: r[i + j] = gf_add(r[i+j], gf_mul(p[i], q[j])) -- you can see it's your usual polynomial multiplication
     return r
 
-def rs_generator_poly(nsym, fcr=0, generator=2, prim=0, field=1024):
+def rs_generator_poly(nsym, b=0, generator=2, prim=0, field=1024):
     '''Generate an irreducible generator polynomial (necessary to encode a message into Reed-Solomon)'''
     g = dbytearray([1])
     exp = 1
+    for i in range(b):
+        exp = gf_mult_noLUT(exp, generator, prim, field)
     for i in xrange(nsym):
         g = gf_poly_mul_simple(g, [1, exp], prim, field)
         exp = gf_mult_noLUT(exp, generator, prim, field)
