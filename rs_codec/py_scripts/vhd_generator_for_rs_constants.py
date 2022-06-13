@@ -1,7 +1,7 @@
 import rs_helper_functions as rs
 
 def main():
-    generate_rs_constants_codeword(8)
+    generate_rs_constants_codeword(10)
 
 def generate_rs_constants_codeword(exp=10):
     f = open("rs_constants.vhd", "w+")
