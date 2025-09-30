@@ -51,7 +51,8 @@ Contact matgonsil@gmail.com (Mateus Silva) for any questions.
 
 Synthesis Sweeps (Design Compiler)
 - Multi-config synthesis sweep scripts and configs are included to evaluate area/timing/power across RS blocks.
-- See `README_sweep_asap7.md` for details. It covers ASAP7 (via `sweep_configs_asap7.txt`) and Nangate45 (via `sweep_configs_nangate45.txt`).
+- See `README_sweep_asap7.md` for details. It covers ASAP7 (via `sweep_configs_asap7.txt`) and Nangate45 (via `sweep_configs_nangate45.txt`),
+  along with a Python helper that can split configuration files across multiple Design Compiler workers.
 - Outputs per run include standard reports and a summary CSV with columns:
   - `label,top,N,K,GF_WIDTH,CLK_NS,area,wns,total_dyn_mw`.
 

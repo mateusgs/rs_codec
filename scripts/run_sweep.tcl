@@ -29,6 +29,9 @@ if {![info exists CONFIG_FILE]} {
 if {![info exists OUT_ROOT]} {
   set OUT_ROOT "data/asap7_sweep_gate_512"
 }
+if {![info exists SUMMARY_FILE]} {
+  set SUMMARY_FILE "$OUT_ROOT/summary.csv"
+}
 if {![info exists DEFAULT_LIB_DIR]} {
   # Optional: falls back when a config line omits the lib dir
   set DEFAULT_LIB_DIR ""
@@ -461,7 +464,11 @@ proc run_one_config {idx n k gf_width clock_ps lib_dir top} {
   puts "[format {INFO: Completed run %d: %s} $idx $label]"
 
   # Summarize results into OUT_ROOT/summary.csv
-  set summary "$OUT_ROOT/summary.csv"
+  set summary $SUMMARY_FILE
+  set summary_dir [file dirname $summary]
+  if {$summary_dir ne ""} {
+    mkdir_p $summary_dir
+  }
   set area ""
   set wns  ""
   set pwr_mw ""

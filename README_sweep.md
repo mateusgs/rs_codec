@@ -38,6 +38,19 @@ Run the Sweep
       -x "set OUT_ROOT data/asap7_sweep"
 - Nangate45 (convenience wrapper):
   - dc_shell -f scripts/run_nangate45.tcl
+- Parallel workers:
+  - python3 scripts/run_sweep_parallel.py \
+      --config sweep_configs_asap7.txt \
+      --out-root data/asap7_sweep \
+      --num-workers 4
+  - The helper script reads the requested configuration file, removes comments
+    and blank lines, and then distributes the remaining entries to each worker
+    in a round-robin order. Worker 0 gets the 1st, (n+1)th, (2n+1)th, … entry,
+    worker 1 gets the 2nd, (n+2)th, … entry, and so on, where ``n`` is
+    ``--num-workers`` (clamped to the number of runnable configurations). Each
+    worker runs ``dc_shell`` with its assigned subset and writes a temporary
+    ``summary.workerX.csv``. When all workers finish, the script merges those
+    summaries into ``summary.csv`` under ``--out-root``.
 
 Outputs
 - Per-run directory: `data/asap7_sweep/Nxx_Kyy_GF<W>_TT2Tnnn_CLKm.nns_<corner>_<top>/`
