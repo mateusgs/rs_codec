@@ -17,8 +17,6 @@ Additional ``dc_shell`` ``-x"set ..."`` options can be supplied via
 ``--define`` or ``--dc-arg``.
 """
 
-from __future__ import annotations
-
 import argparse
 import shutil
 import subprocess
@@ -116,7 +114,14 @@ def build_dc_command(
     config_path: Path,
     summary_path: Path,
 ) -> List[str]:
-    cmd: List[str] = [args.dc_bin, "-f", str(args.run_script)]
+    """Build dc_shell command with -x assignments BEFORE -f script.
+
+    Some dc_shell versions process -f eagerly; ensure variables are set first
+    so run_sweep.tcl picks up CONFIG_FILE/OUT_ROOT/SUMMARY_FILE overrides.
+    """
+    cmd: List[str] = [args.dc_bin]
+
+    # Define variables first
     cmd.extend(["-x", f"set CONFIG_FILE {config_path}"])
     cmd.extend(["-x", f"set OUT_ROOT {args.out_root}"])
     cmd.extend(["-x", f"set SUMMARY_FILE {summary_path}"])
@@ -131,6 +136,10 @@ def build_dc_command(
             raise ValueError(f"Invalid --define '{definition}'. NAME must be non-empty")
         cmd.extend(["-x", f"set {name} {value}"])
 
+    # Then source the main sweep script
+    cmd.extend(["-f", str(args.run_script)])
+
+    # Additional dc options last
     if args.dc_arg:
         cmd.extend(args.dc_arg)
 
@@ -199,7 +208,8 @@ def main(argv: Sequence[str]) -> int:
         cmd = build_dc_command(args, cfg_path.resolve(), summary_path.resolve())
         worker_cmds.append(cmd)
 
-    procs: List[subprocess.Popen[str]] = []
+    # Python 3.6 compatibility: avoid subscripting subprocess.Popen in annotations
+    procs = []  # type: List[subprocess.Popen]
     log_files = []
     try:
         for idx, cmd in enumerate(worker_cmds):
@@ -247,4 +257,3 @@ def main(argv: Sequence[str]) -> int:
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
-
