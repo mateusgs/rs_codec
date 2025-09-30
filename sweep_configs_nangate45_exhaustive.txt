@@ -1,0 +1,42 @@
+# RS Codec Synthesis Configs (Nangate45, expanded)
+# Format: N K GF_WIDTH clock_ps [library_dir] [top]
+# Library: Nangate45 compiled DBs
+
+# Common interconnect/storage RS codes
+# - Ethernet Clause 91: RS(544,514), GF(2^10), t=15
+# - Ethernet: RS(528,514), GF(2^10), t=7
+# - DVB/OTN/Storage: RS(255,239), RS(255,223), GF(2^8)
+# - DVB: RS(204,188), GF(2^8)
+
+# Library dir
+set LIB /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db
+
+# RS(544,514), GF10 (t=15), 8.0 ns
+544 514 10 8000.0 $LIB rs_encoder_wrapper
+544 514 10 8000.0 $LIB rs_syndrome
+544 514 10 8000.0 $LIB rs_decoder_plus_syndrome
+
+# RS(528,514), GF10 (t=7), 8.0 ns
+528 514 10 8000.0 $LIB rs_encoder_wrapper
+528 514 10 8000.0 $LIB rs_syndrome
+528 514 10 8000.0 $LIB rs_decoder_plus_syndrome
+
+# RS(255,239), GF8 (t=8), 10.0 ns
+255 239 8 10000.0 $LIB rs_encoder_wrapper
+255 239 8 10000.0 $LIB rs_syndrome
+255 239 8 10000.0 $LIB rs_decoder_plus_syndrome
+
+# RS(255,223), GF8 (t=16), 10.0 ns
+255 223 8 10000.0 $LIB rs_encoder_wrapper
+255 223 8 10000.0 $LIB rs_syndrome
+255 223 8 10000.0 $LIB rs_decoder_plus_syndrome
+
+# RS(204,188), GF8 (t=8), 8.0 ns
+204 188 8 8000.0 $LIB rs_encoder_wrapper
+204 188 8 8000.0 $LIB rs_syndrome
+204 188 8 8000.0 $LIB rs_decoder_plus_syndrome
+
+# Smaller codes for quick sanity
+63 55 6 8000.0 $LIB rs_encoder_wrapper
+31 27 5 8000.0 $LIB rs_encoder_wrapper
+15 11 4 8000.0 $LIB rs_encoder_wrapper

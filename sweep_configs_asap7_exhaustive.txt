@@ -1,0 +1,75 @@
+# RS Codec Synthesis Configs (ASAP7, from selection over specified input/targets)
+# Format: N K GF_WIDTH clock_ps [library_dir] [top]
+# Library: ASAP7 TT compiled DBs
+
+# Targets: 1e-12, 1e-15, 1e-30; Inputs: 1e-4 down to 1e-15 in 0.5-decade steps
+
+# RS(514,512), GF8 (t=1), 5.0 ns
+514 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+514 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+514 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(516,512), GF8 (t=2), 5.0 ns
+516 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+516 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+516 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(518,512), GF8 (t=3), 5.0 ns
+518 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+518 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+518 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(520,512), GF8 (t=4), 5.0 ns
+520 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+520 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+520 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(522,512), GF8 (t=5), 5.0 ns
+522 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+522 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+522 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(524,512), GF8 (t=6), 5.0 ns
+524 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+524 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+524 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(526,512), GF8 (t=7), 5.0 ns
+526 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+526 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+526 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(528,512), GF8 (t=8), 5.0 ns
+528 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+528 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+528 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(530,512), GF8 (t=9), 5.0 ns
+530 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+530 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+530 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(532,512), GF8 (t=10), 5.0 ns
+532 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+532 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+532 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(534,512), GF8 (t=11), 5.0 ns
+534 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+534 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+534 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(538,512), GF8 (t=13), 5.0 ns
+538 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+538 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+538 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(544,512), GF8 (t=16), 5.0 ns
+544 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+544 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+544 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+
+# RS(554,512), GF8 (t=21), 5.0 ns
+554 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+554 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+554 512 8 7000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome

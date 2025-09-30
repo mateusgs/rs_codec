@@ -24,16 +24,17 @@
 
 # --------- User/Env overrides ---------
 if {![info exists CONFIG_FILE]} {
-  set CONFIG_FILE "sweep_configs_asap7.txt"
+  set CONFIG_FILE "sweep_configs_asap7_exhaustive.txt"
 }
 if {![info exists OUT_ROOT]} {
-  set OUT_ROOT "data/asap7_sweep"
+  set OUT_ROOT "data/asap7_sweep_gate_512"
 }
 if {![info exists DEFAULT_LIB_DIR]} {
   # Optional: falls back when a config line omits the lib dir
   set DEFAULT_LIB_DIR ""
 }
 # Clock must be specified per config; no default
+set_host_options -max_cores 16
 
 # --------- Paths ---------
 set REPO_ROOT [pwd]
@@ -376,20 +377,23 @@ proc run_one_config {idx n k gf_width clock_ps lib_dir top} {
   link
 
   # Basic constraints (clk/rst)
+  # Keep design time unit consistent with libraries (ASAP7 uses ps)
+  catch { set_units -time ps }
   set CLK_PIN clk
   set RST_PIN rst
-  create_clock -name clk -period $clk_ns [get_ports $CLK_PIN]
+  # Use clock period in picoseconds to match design units
+  create_clock -name clk -period $clock_ps [get_ports $CLK_PIN]
   set_dont_touch [get_ports $RST_PIN]
   set_ideal_network [get_ports $RST_PIN]
   set_false_path -from [get_ports $RST_PIN]
-  set_max_fanout 20 [current_design]
+  set_max_fanout 64 [current_design]
 
   # Power: assume random data on data inputs only and standard clock switching
   # - Data ports (e.g., i_symbol*): P=0.5, toggle_rate=0.5 toggles/cycle
   # - Other primary inputs (control/handshake): no switching
   # - Reset: no switching
-  # Use toggle rate per-ns to match typical DC expectations.
-  set trand_toggle_rate [expr {0.5 / $clk_ns}]
+  # Use toggle rate per-design-time-unit (ps here): 0.5 toggles per cycle / period_ps
+  set trand_toggle_rate [expr {0.5 / $clock_ps}]
   catch {
     set all_in   [all_inputs]
     set clk_port [get_ports $CLK_PIN]
@@ -419,8 +423,6 @@ proc run_one_config {idx n k gf_width clock_ps lib_dir top} {
       }
     }
   }
-  # Increase power analysis effort
-  catch { set_power_analysis_options -analysis_effort medium }
 
   # Optional user constraints in CWD
   if {[file exists "constraints.tcl"]} {
@@ -429,7 +431,7 @@ proc run_one_config {idx n k gf_width clock_ps lib_dir top} {
 
   # Compile
   uniquify
-  compile_ultra -no_autoungroup -no_boundary_optimization
+  compile_ultra -retime -no_autoungroup -gate_clock
   # Reassert current_design in case compile changes focus
   catch { current_design $elab_top }
 
@@ -437,10 +439,15 @@ proc run_one_config {idx n k gf_width clock_ps lib_dir top} {
   set topModule [get_object_name [current_design]]
   # Preserve label using requested top name; topModule may differ if alias is used
   write -f ddc -o "$run_root/$topModule.compile.ddc" -hierarchy
+  report_units                   > "$rpt_dir/${topModule}_units.rep"
   report_qor                      > "$rpt_dir/${topModule}_qor.rep"
+  report_clocks         > "$rpt_dir/${topModule}_clocks.rep"
+  check_timing          > "$rpt_dir/${topModule}_check_timing.rep"
   report_timing -significant_digits 6 > "$rpt_dir/${topModule}_timing.rep"
   report_clock                   > "$rpt_dir/${topModule}_clock.rep"
   report_power -analysis_effort medium -significant_digits 6 > "$rpt_dir/${topModule}_power.rep"
+  report_power -hierarchy -analysis_effort medium -significant_digits 6 > "$rpt_dir/${topModule}_power_hierarchy.rep"
+  report_clock_gating > "$rpt_dir/${topModule}_clock_gating.rep"
   report_area -hierarchy             > "$rpt_dir/${topModule}_area.rep"
   report_path_group                 > "$rpt_dir/${topModule}_pathgroup.rep"
 

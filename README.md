@@ -54,3 +54,23 @@ Synthesis Sweeps (Design Compiler)
 - See `README_sweep_asap7.md` for details. It covers ASAP7 (via `sweep_configs_asap7.txt`) and Nangate45 (via `sweep_configs_nangate45.txt`).
 - Outputs per run include standard reports and a summary CSV with columns:
   - `label,top,N,K,GF_WIDTH,CLK_NS,area,wns,total_dyn_mw`.
+
+**Plots: Energy/Rate vs Input BER**
+- Script: `scripts/plot_rs_codec_vs_ber.py`
+- Inputs:
+  - RS-FEC selection: `rsfec_selection_m8_halfdec.csv` (from `scripts/rsfec_select_and_cfg.py`)
+  - Synthesis summary: `data/asap7_sweep_512/summary.csv`
+- Run:
+  - `python scripts/plot_rs_codec_vs_ber.py --selection rsfec_selection_m8_halfdec.csv --summary data/asap7_sweep_512/summary.csv`
+  - With decoder clock gating (syndrome-only for clean words):
+    - `python scripts/plot_rs_codec_vs_ber.py --selection rsfec_selection_m8_halfdec.csv --summary data/asap7_sweep_512/summary.csv --gated --syndrome-cycles-per-symbol 1 --decoder-cycles-per-symbol 2`
+- Outputs (under `plots/`):
+  - Figures (PNG + PDF): `rscodec_pj_per_bit_vs_input_BER.*`, `rscodec_rate_vs_input_BER.*`
+  - Raw data (CSV): `rscodec_pj_per_bit_vs_input_BER.csv`, `rscodec_rate_vs_input_BER.csv`
+  - Total pJ/bit (default): encoder energy + expected decoder energy per bit.
+    - Encoder: computed from `rs_encoder_wrapper` dynamic power and its cycles/symbol (default 1.0).
+    - Decoder (gated): `E_rx = E_syndrome + P_correctable × (E_decoder − E_syndrome)` with
+      `P_correctable = Σ_{i=1..t} Binom(n,i) p_s^i (1−p_s)^(n−i)`, `p_s = 1 − (1−p_b)^m`.
+      Cycles/symbol: syndrome default 1.0, decoder default 2.0 (half-decoder).
+    - Throughput used: `rate × m × f_clk / cycles_per_symbol` per block.
+  - Legends are formatted as exact targets (`1e-12`, `1e-15`, `1e-30`).
