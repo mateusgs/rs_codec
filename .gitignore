@@ -1,4 +1,6 @@
 .WORK/*
 alib-52/*
 data/*
+olddata/*
+newdata/*
 error*.txt
