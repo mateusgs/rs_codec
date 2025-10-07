@@ -2,7 +2,7 @@ RS Codec Synthesis Sweep (Synopsys DC)
 
 Overview
 - Runs multi-config synthesis for encoder/decoder/syndrome blocks using Design Compiler.
-- Reads `sweep_configs_asap7.txt`, compiles per line, and writes power/area/timing reports.
+- Reads `config/sweep_configs_asap7.txt`, compiles per line, and writes power/area/timing reports.
 - GF column is the symbol bit width (e.g., 4 => GF(2^4)=GF16).
 
 Environment Setup (tcsh/csh)
@@ -16,8 +16,8 @@ Environment Setup (bash/zsh)
 - source "$SNPS/Library_Compiler/vT-2022.03-SP4/SETUP"
 
 Config Files
-- ASAP7: `sweep_configs_asap7.txt`
-- Nangate45: `sweep_configs_nangate45.txt`
+- ASAP7: `config/sweep_configs_asap7.txt`
+- Nangate45: `config/sweep_configs_nangate45.txt`
 - Format: `N K GF_WIDTH clock_ps [library_dir] [top]`
   - `N`: codeword length (e.g., 15, 31, 63)
   - `K`: info length (e.g., 11, 21, 51)
@@ -33,14 +33,14 @@ Example Lines
 
 Run the Sweep
 - ASAP7:
-  - dc_shell -f scripts/run_sweep_asap7.tcl \
-      -x "set CONFIG_FILE sweep_configs_asap7.txt" \
+  - dc_shell -f scripts/run_asap7.tcl \
+      -x "set CONFIG_FILE config/sweep_configs_asap7.txt" \
       -x "set OUT_ROOT data/asap7_sweep"
 - Nangate45 (convenience wrapper):
   - dc_shell -f scripts/run_nangate45.tcl
 - Parallel workers:
   - python3 scripts/run_sweep_parallel.py \
-      --config sweep_configs_asap7.txt \
+      --config config/sweep_configs_asap7.txt \
       --out-root data/asap7_sweep \
       --num-workers 4
   - The helper script reads the requested configuration file, removes comments
@@ -49,8 +49,9 @@ Run the Sweep
     worker 1 gets the 2nd, (n+2)th, … entry, and so on, where ``n`` is
     ``--num-workers`` (clamped to the number of runnable configurations). Each
     worker runs ``dc_shell`` with its assigned subset and writes a temporary
-    ``summary.workerX.csv``. When all workers finish, the script merges those
-    summaries into ``summary.csv`` under ``--out-root``.
+    ``summary.workerX.csv``. When all workers finish, the script appends those
+    summaries into ``summary.csv`` under ``--out-root`` (header is written once
+    and repeated runs will accumulate rows without overwriting existing data).
 
 Outputs
 - Per-run directory: `data/asap7_sweep/Nxx_Kyy_GF<W>_TT2Tnnn_CLKm.nns_<corner>_<top>/`
@@ -84,9 +85,9 @@ Troubleshooting
 - `Can't find port 'clk'/'rst'`: your top must expose `clk`/`rst`. All supported tops do.
 
 One-off Quick Test
-- Create a minimal config file (e.g., `sweep_one.txt`):
+- Create a minimal config file (e.g., `config/sweep_one.txt`):
   - 15 11 4 2000.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
 - Run:
-  - dc_shell -f scripts/run_sweep_asap7.tcl \
-      -x "set CONFIG_FILE sweep_one.txt" \
+  - dc_shell -f scripts/run_asap7.tcl \
+      -x "set CONFIG_FILE config/sweep_one.txt" \
       -x "set OUT_ROOT data/asap7_sweep_test"
