@@ -21,6 +21,25 @@ entity rs_full_multiplier_core is
 end rs_full_multiplier_core;
 
 architecture behavioral of rs_full_multiplier_core is
+    --
+    -- Notes on GF(2^m) polynomials and reductions
+    -- This core implements polynomial-basis multiplication over GF(2^m) and
+    -- reduces products modulo a primitive polynomial p(x) for each m.
+    -- The chosen polynomials match widely used public references, including
+    --   - IEEE 802.3 Clause 91 RS-FEC (GF(2^10) with p(x)=x^10 + x^3 + 1)
+    --   - NASA/Wicker RS primer (NTRS 19900019023)
+    --   - Common RS cores (e.g., GF(2^8) p(x)=x^8 + x^4 + x^3 + x^2 + 1)
+    -- Polynomials used per m in this file:
+    --   m=2:  x^2 + x + 1
+    --   m=3:  x^3 + x + 1
+    --   m=4:  x^4 + x + 1
+    --   m=5:  x^5 + x^2 + 1
+    --   m=6:  x^6 + x + 1
+    --   m=7:  x^7 + x + 1
+    --   m=8:  x^8 + x^4 + x^3 + x^2 + 1
+    --   m=9:  x^9 + x^4 + 1
+    --   m=10: x^10 + x^3 + 1
+    --
     subtype word_t is std_logic_vector(WORD_LENGTH-1 downto 0);
     type slv_array is array (natural range <>) of word_t;
     signal w_and_out : slv_array(0 to WORD_LENGTH-1);
@@ -513,9 +532,9 @@ begin
                                  w_and_out(2)(7) xor
                                  w_and_out(1)(8);
         --calculation for x^10
-        w_factors_overflow(1) <= w_and_out(8)(2) xor 
+        w_factors_overflow(1) <= w_and_out(8)(2) xor
                                  w_and_out(7)(3) xor
-                                 w_and_out(4)(4) xor
+                                 w_and_out(6)(4) xor
                                  w_and_out(5)(5) xor
                                  w_and_out(4)(6) xor
                                  w_and_out(3)(7) xor
@@ -568,8 +587,7 @@ begin
                 w_and_out(2)(1) xor
                 w_and_out(1)(2) xor
                 w_and_out(0)(3) xor
-                w_factors_overflow(3) xor
-                w_factors_overflow(8);
+                w_factors_overflow(3);
 
         o(4) <= w_and_out(4)(0) xor
                 w_and_out(3)(1) xor
@@ -610,8 +628,7 @@ begin
                 w_and_out(1)(6) xor
                 w_and_out(0)(7) xor
                 w_factors_overflow(3) xor
-                w_factors_overflow(7) xor
-                w_factors_overflow(8);
+                w_factors_overflow(7);
 
         o(8) <= w_and_out(8)(0) xor
                 w_and_out(7)(1) xor
@@ -622,8 +639,7 @@ begin
                 w_and_out(2)(6) xor
                 w_and_out(1)(7) xor
                 w_and_out(0)(8) xor
-                w_factors_overflow(4) xor
-                w_factors_overflow(8);
+                w_factors_overflow(4);
     end generate;
 
     gen_word_length_10: if WORD_LENGTH = 10 generate
@@ -720,8 +736,7 @@ begin
         o(2) <= w_and_out(2)(0) xor
                 w_and_out(1)(1) xor
                 w_and_out(0)(2) xor
-                w_factors_overflow(2) xor
-                w_factors_overflow(9);
+                w_factors_overflow(2);
 
         o(3) <= w_and_out(3)(0) xor
                 w_and_out(2)(1) xor
@@ -747,8 +762,7 @@ begin
                 w_and_out(1)(4) xor
                 w_and_out(0)(5) xor
                 w_factors_overflow(2) xor
-                w_factors_overflow(5) xor
-                w_factors_overflow(9);
+                w_factors_overflow(5);
 
         o(6) <= w_and_out(6)(0) xor
                 w_and_out(5)(1) xor
@@ -793,8 +807,7 @@ begin
                 w_and_out(2)(7) xor
                 w_and_out(1)(8) xor
                 w_and_out(0)(9) xor
-                w_factors_overflow(6) xor
-                w_factors_overflow(9);
+                w_factors_overflow(6);
     end generate;
     --TODO: WORD_LENGTH 0 and 1 should be covered here as well.
     gen_not_supported: if WORD_LENGTH > 10 generate
