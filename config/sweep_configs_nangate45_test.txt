@@ -1,0 +1,17 @@
+# Encoder
+544 514 10 500.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+544 514 10 1000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+544 514 10 2000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+544 514 10 4500.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# Syndrome
+544 514 10 500.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 1000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 4000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+
+# Decoder
+544 514 10 500.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 1000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 4500.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome

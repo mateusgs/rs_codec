@@ -1,0 +1,58 @@
+# RS Codec Fine-Grained Energy Optimization Sweep (ASAP7)
+# Objective: Fine sweep around optimal 1.6ns (625 MHz) in 10 MHz increments
+# Format: N K GF_WIDTH clock_ps [library_dir] [top]
+# Library: ASAP7 TT compiled DBs
+
+# RS(544,514), GF10 (t=15)
+# Optimal point found: 1.6ns (625 MHz)
+# Fine sweep: 555 MHz to 714 MHz (1.4ns to 1.8ns) in ~10 MHz steps
+
+# ENCODER - Fine sweep around 1.6ns
+# 714 MHz (1.4ns)
+544 514 10 1400.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+
+# 690 MHz (1.45ns)
+544 514 10 1450.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+
+# 667 MHz (1.5ns)
+544 514 10 1500.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+
+# 645 MHz (1.55ns)
+544 514 10 1550.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+
+# 625 MHz (1.6ns) - OPTIMAL from coarse sweep
+544 514 10 1600.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+
+# 606 MHz (1.65ns)
+544 514 10 1650.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+
+# 588 MHz (1.7ns)
+544 514 10 1700.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+
+# 571 MHz (1.75ns)
+544 514 10 1750.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+
+# 556 MHz (1.8ns)
+544 514 10 1800.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_encoder_wrapper
+
+# SYNDROME - Fine sweep around 1.6ns
+544 514 10 1400.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+544 514 10 1450.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+544 514 10 1500.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+544 514 10 1550.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+544 514 10 1600.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+544 514 10 1650.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+544 514 10 1700.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+544 514 10 1750.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+544 514 10 1800.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_syndrome
+
+# DECODER - Fine sweep around 1.6ns
+544 514 10 1400.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+544 514 10 1450.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+544 514 10 1500.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+544 514 10 1550.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+544 514 10 1600.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+544 514 10 1650.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+544 514 10 1700.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+544 514 10 1750.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome
+544 514 10 1800.0 /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT rs_decoder_plus_syndrome

@@ -1,0 +1,30 @@
+# RS Codec Energy Optimization Sweep (NanGate45)
+# Objective: Find clock period with best ops/W (energy efficiency)
+# Format: N K GF_WIDTH clock_ps [library_dir] [top]
+# Library: NanGate45 Typical DB
+
+# RS(544,514), GF10 (t=15)
+# Clock period sweep: 500ps to 10ns (2 GHz down to 100 MHz)
+# Targeting the knee of the energy-delay curve
+
+# Fine sweep around expected optimal range (2-6ns, 167-500 MHz)
+# Coarser sweep at extremes
+# Note: 1ns (1 GHz) failed timing, starting from 2ns (500 MHz)
+
+# DECODER - Full sweep (most critical for energy, starting from 2ns)
+
+544 514 10 1400.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 1600.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 1800.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2200.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2400.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2600.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2800.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 3000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 3500.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 4000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 5000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 6000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 8000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 10000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome

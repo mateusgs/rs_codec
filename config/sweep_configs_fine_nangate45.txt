@@ -1,0 +1,78 @@
+# RS Codec Fine-Grained Energy Optimization Sweep (NanGate45)
+# Objective: Fine sweep around optimal 2.2ns (454.5 MHz) in 10 MHz increments
+# Format: N K GF_WIDTH clock_ps [library_dir] [top]
+# Library: NanGate45 Typical DB
+
+# RS(544,514), GF10 (t=15)
+# Optimal point found: 2.2ns (454.5 MHz)
+# Fine sweep: 400 MHz to 526 MHz (1.9ns to 2.5ns) in ~10 MHz steps
+
+# ENCODER - Fine sweep around 2.2ns
+# 526 MHz (1.9ns)
+544 514 10 1900.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 513 MHz (1.95ns)
+544 514 10 1950.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 500 MHz (2.0ns)
+544 514 10 2000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 488 MHz (2.05ns)
+544 514 10 2050.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 476 MHz (2.1ns)
+544 514 10 2100.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 465 MHz (2.15ns)
+544 514 10 2150.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 455 MHz (2.2ns) - OPTIMAL from coarse sweep
+544 514 10 2200.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 444 MHz (2.25ns)
+544 514 10 2250.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 435 MHz (2.3ns)
+544 514 10 2300.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 426 MHz (2.35ns)
+544 514 10 2350.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 417 MHz (2.4ns)
+544 514 10 2400.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 408 MHz (2.45ns)
+544 514 10 2450.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# 400 MHz (2.5ns)
+544 514 10 2500.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_encoder_wrapper
+
+# SYNDROME - Fine sweep around 2.2ns
+544 514 10 1900.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 1950.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2050.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2100.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2150.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2200.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2250.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2300.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2350.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2400.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2450.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+544 514 10 2500.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_syndrome
+
+# DECODER - Fine sweep around 2.2ns
+544 514 10 1900.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 1950.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2000.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2050.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2100.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2150.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2200.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2250.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2300.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2350.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2400.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2450.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
+544 514 10 2500.0 /w/ee.00/puneet/aaronyen/NanGate45-Synopsys-Enablement/NanGate45/db rs_decoder_plus_syndrome
