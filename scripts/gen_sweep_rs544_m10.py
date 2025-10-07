@@ -3,7 +3,7 @@
 Generate a sweep config (ASAP7/DC) for RS(544,514) with GF_WIDTH=10 across clock
 frequencies in MHz, using 10 MHz increments by default.
 
-Output format matches `sweep_configs_asap7_exhaustive.txt`:
+Output format matches `config/sweep_configs_asap7_exhaustive.txt`:
   N K GF_WIDTH clock_ps [library_dir] [top]
 
 For each frequency point, emit lines for:
@@ -13,7 +13,7 @@ For each frequency point, emit lines for:
 
 Examples
   python scripts/gen_sweep_rs544_m10.py \
-    --out sweep_configs_asap7_rs544_m10_clk_sweep.txt \
+    --out config/sweep_configs_asap7_rs544_m10_clk_sweep.txt \
     --fmin 10 --fmax 1000 --step 10 \
     --lib /w/ee.00/puneet/aaronyen/asap7/asap7sc7p5t_28/LIB/CCS/TT
 """
@@ -57,7 +57,7 @@ def build_lines(f_min_mhz: float, f_max_mhz: float, step_mhz: float, lib: str) -
 
 def main():
     ap = argparse.ArgumentParser(description="Generate clock sweep config for RS(544,514) GF10 (ASAP7)")
-    ap.add_argument("--out", type=Path, default=Path("sweep_configs_asap7_rs544_m10_clk_sweep.txt"),
+    ap.add_argument("--out", type=Path, default=Path("config/sweep_configs_asap7_rs544_m10_clk_sweep.txt"),
                     help="Output config file path")
     ap.add_argument("--fmin", type=float, default=10.0, help="Min frequency in MHz (inclusive)")
     ap.add_argument("--fmax", type=float, default=1000.0, help="Max frequency in MHz (inclusive)")
@@ -73,6 +73,7 @@ def main():
         raise SystemExit("fmin must be <= fmax")
 
     lines = build_lines(args.fmin, args.fmax, args.step, args.lib)
+    args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Wrote {args.out} with {len(lines)} lines")
 
