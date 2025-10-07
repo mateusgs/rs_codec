@@ -3,13 +3,14 @@
 
 This helper script partitions a sweep configuration file and spawns multiple
 Design Compiler (`dc_shell`) processes, each running ``run_sweep.tcl`` with a
-subset of the configurations. A per-worker summary CSV is produced and merged
-into the canonical ``summary.csv`` once all workers complete.
+subset of the configurations. A per-worker summary CSV is produced and then
+appended into the canonical ``summary.csv`` once all workers complete (header
+is written only once across runs).
 
 Example usage::
 
     python3 scripts/run_sweep_parallel.py \
-        --config sweep_configs_asap7.txt \
+        --config config/sweep_configs_asap7.txt \
         --out-root data/asap7_sweep \
         --num-workers 4
 
@@ -109,54 +110,41 @@ def chunk_round_robin(items: Sequence[str], n: int) -> List[List[str]]:
     return buckets
 
 
-def build_dc_command(
+def build_dc_command_with_wrapper(
     args: argparse.Namespace,
-    config_path: Path,
-    summary_path: Path,
+    wrapper_path: Path,
 ) -> List[str]:
-    """Build dc_shell command with -x assignments BEFORE -f script.
+    """Build dc_shell command to run a generated wrapper Tcl.
 
-    Some dc_shell versions process -f eagerly; ensure variables are set first
-    so run_sweep.tcl picks up CONFIG_FILE/OUT_ROOT/SUMMARY_FILE overrides.
+    The wrapper sets variables (CONFIG_FILE, OUT_ROOT, SUMMARY_FILE, and any
+    --define assignments) and then sources the main run_sweep.tcl. This avoids
+    ambiguities in -x ordering across dc_shell versions.
     """
-    cmd: List[str] = [args.dc_bin]
-
-    # Define variables first
-    cmd.extend(["-x", f"set CONFIG_FILE {config_path}"])
-    cmd.extend(["-x", f"set OUT_ROOT {args.out_root}"])
-    cmd.extend(["-x", f"set SUMMARY_FILE {summary_path}"])
-
-    for definition in args.define:
-        if "=" not in definition:
-            raise ValueError(f"Invalid --define '{definition}'. Expected NAME=VALUE")
-        name, value = definition.split("=", 1)
-        name = name.strip()
-        value = value.strip()
-        if not name:
-            raise ValueError(f"Invalid --define '{definition}'. NAME must be non-empty")
-        cmd.extend(["-x", f"set {name} {value}"])
-
-    # Then source the main sweep script
-    cmd.extend(["-f", str(args.run_script)])
-
-    # Additional dc options last
+    cmd: List[str] = [args.dc_bin, "-f", str(wrapper_path)]
     if args.dc_arg:
         cmd.extend(args.dc_arg)
-
     return cmd
 
 
 def merge_summaries(summary_files: Iterable[Path], dest: Path) -> None:
-    header_written = False
-    with dest.open("w") as fout:
+    """Append worker summaries into ``dest`` while deduplicating the header.
+
+    If ``dest`` already exists and is non-empty, the header from worker files
+    is skipped. Otherwise, the first encountered header is written and all data
+    rows are appended. This allows repeated invocations to cumulatively build
+    a single combined CSV without overwriting previous results.
+    """
+    header_written = dest.exists() and dest.stat().st_size > 0
+    # Always append so multiple runs accumulate in the same summary.csv
+    with dest.open("a") as fout:
         for summary in summary_files:
             if not summary.exists():
                 continue
             with summary.open() as fin:
                 for line_no, line in enumerate(fin):
-                    if line_no == 0:
-                        if header_written:
-                            continue
+                    if line_no == 0 and header_written:
+                        continue
+                    if line_no == 0 and not header_written:
                         header_written = True
                     fout.write(line)
 
@@ -205,7 +193,28 @@ def main(argv: Sequence[str]) -> int:
         summary_path = args.out_root / f"summary.worker{worker_idx}.csv"
         worker_summaries.append(summary_path)
 
-        cmd = build_dc_command(args, cfg_path.resolve(), summary_path.resolve())
+        # Generate a per-worker wrapper Tcl script
+        wrapper_path = tmp_dir / "run_worker.tcl"
+        lines: List[str] = []
+        lines.append(f"set CONFIG_FILE {cfg_path.resolve()}")
+        lines.append(f"set OUT_ROOT {args.out_root}")
+        lines.append(f"set SUMMARY_FILE {summary_path.resolve()}")
+        # Instruct run_sweep.tcl to explicitly exit dc_shell on completion
+        lines.append("set RUN_SWEEP_AUTO_EXIT 1")
+        for definition in args.define:
+            if "=" not in definition:
+                raise ValueError(f"Invalid --define '{definition}'. Expected NAME=VALUE")
+            name, value = definition.split("=", 1)
+            name = name.strip()
+            value = value.strip()
+            if not name:
+                raise ValueError(f"Invalid --define '{definition}'. NAME must be non-empty")
+            lines.append(f"set {name} {value}")
+        # Source the main script after variables are set
+        lines.append(f"source {args.run_script.resolve()}")
+        wrapper_path.write_text("\n".join(lines) + "\n")
+
+        cmd = build_dc_command_with_wrapper(args, wrapper_path)
         worker_cmds.append(cmd)
 
     # Python 3.6 compatibility: avoid subscripting subprocess.Popen in annotations
