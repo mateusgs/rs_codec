@@ -14,6 +14,7 @@ entity rs_chien_forney is
         WORD_LENGTH : natural range 2 to 10;
         TWO_TIMES_T : natural range 1 to 1022;
         OUTPUT_PARITY_SYMBOLS : boolean := true;
+        FCR : natural range 0 to 1022 := 0;
         TEST_MODE : boolean := false
     );
     port (
@@ -111,6 +112,7 @@ begin
     RS_FORNEY_INST: rs_forney
                     generic map (WORD_LENGTH => WORD_LENGTH, 
                                  T => T,
+                                 FCR => FCR,
                                  TEST_MODE => TEST_MODE)
                     port map(clk => clk,
                              i_has_error => w_has_error,

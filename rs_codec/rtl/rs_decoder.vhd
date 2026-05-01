@@ -221,6 +221,7 @@ begin
                            generic map(WORD_LENGTH => WORD_LENGTH,
                                        TWO_TIMES_T => TWO_TIMES_T,
                                        OUTPUT_PARITY_SYMBOLS => OUTPUT_PARITY_SYMBOLS,
+                                       FCR => FCR,
                                        TEST_MODE => TEST_MODE)
                            port map(clk => clk,
                                     rst => rst,

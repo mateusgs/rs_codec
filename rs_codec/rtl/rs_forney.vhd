@@ -14,6 +14,7 @@ entity rs_forney is
         generic (
             WORD_LENGTH : natural range 2 to 10;
             T : natural range 1 to 1022;
+            FCR : natural range 0 to 1022 := 0;
             TEST_MODE : boolean := false
         );
         port (
@@ -41,12 +42,17 @@ begin
 		report "ASSERT FAILURE - T <= 2**WORD_LENGTH-2" 
         severity failure;
 
+	assert (FCR <= 2**WORD_LENGTH-2) 
+		report "ASSERT FAILURE - FCR <= 2**WORD_LENGTH-2" 
+        severity failure;
+
     GEN_rs_forney_UNIT: for I in 0 to T-1 generate
+        constant ROOT_INDEX : natural := (I + FCR) mod (2**WORD_LENGTH - 1);
     begin
         w_selector(I) <= i_terms(I) when (i_select_input = '1') else r_flop(I);
         MULTIPLIER: rs_multiplier
                     generic map (WORD_LENGTH => WORD_LENGTH,
-                                 MULT_CONSTANT => get_pow(WORD_LENGTH, I),
+                                 MULT_CONSTANT => get_pow(WORD_LENGTH, ROOT_INDEX),
                                  TEST_MODE => TEST_MODE)
                     port map (i => w_selector(I), 
                               o => w_multiplier(I));
