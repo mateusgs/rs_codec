@@ -10,6 +10,7 @@ entity rs_syndrome is
         WORD_LENGTH : natural range 2 to 10;
         TWO_TIMES_T : natural range 1 to 1022;
         OUTPUT_PARITY_SYMBOLS : boolean;
+        FCR : natural range 0 to 1022 := 0;
         TEST_MODE : boolean := false
     );
     port (
@@ -67,6 +68,7 @@ architecture behavioral of rs_syndrome is
         generic (
             WORD_LENGTH : natural range 2 to 10;
             TWO_TIMES_T : natural range 1 to 1022;
+            FCR : natural range 0 to 1022 := 0;
             TEST_MODE : boolean := false
         );
         port (
@@ -112,7 +114,9 @@ begin
 
     RS_SYNDROME_UNIT_INST: rs_syndrome_unit
                            generic map(WORD_LENGTH => WORD_LENGTH, 
-                                       TWO_TIMES_T => TWO_TIMES_T)
+                                       TWO_TIMES_T => TWO_TIMES_T,
+                                       FCR => FCR,
+                                       TEST_MODE => TEST_MODE)
                            port map(clk => clk,
                                     rst => rst,
                                     i_select_feedback => w_select_feedback,
@@ -340,6 +344,7 @@ entity rs_syndrome_unit is
     generic (
     	WORD_LENGTH : natural range 2 to 10;
         TWO_TIMES_T : natural range 1 to 1022;
+        FCR : natural range 0 to 1022 := 0;
         TEST_MODE : boolean := false
     );
     port (
@@ -358,6 +363,7 @@ begin
         RS_SYNDROME_SUBUNIT_INST: rs_syndrome_subunit
                                   generic map(WORD_LENGTH => WORD_LENGTH, 
                                               I => I,
+                                              FCR => FCR,
                                               TEST_MODE => TEST_MODE)
                                   port map(clk => clk,
                                            rst => rst,

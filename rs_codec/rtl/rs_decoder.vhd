@@ -25,6 +25,7 @@ entity rs_decoder is
 			K : natural range 1 to 1022;
             RS_GF : RSGFSize := RS_GF_NONE;
             OUTPUT_PARITY_SYMBOLS : boolean := true;
+            FCR : natural range 0 to 1022 := 0;
             TEST_MODE : boolean := false
 	  );
 	  port (
@@ -125,6 +126,7 @@ begin
                                    WORD_LENGTH => WORD_LENGTH, 
                                    TWO_TIMES_T => TWO_TIMES_T,
                                    OUTPUT_PARITY_SYMBOLS => OUTPUT_PARITY_SYMBOLS,
+                                   FCR => FCR,
                                    TEST_MODE => TEST_MODE)
                        port map(clk => clk,
                                 rst => rst,

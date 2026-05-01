@@ -12,6 +12,7 @@ entity rs_codec is
 		    K : natural range 1 to 1022;
             RS_GF : RSGFSize := RS_GF_NONE;
             MODE : boolean := false; -- ENCODER=false and DECODER=true
+            FCR : natural range 0 to 1022 := 0;
             TEST_MODE : boolean := false
 	  );
 	  port (
@@ -59,6 +60,7 @@ begin
                                    K => K,
                                    RS_GF => RS_GF,
                                    OUTPUT_PARITY_SYMBOLS => false,
+                                   FCR => FCR,
                                    TEST_MODE => TEST_MODE)
                        port map(clk => clk,
                                 rst => rst,

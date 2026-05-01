@@ -10,6 +10,7 @@ entity rs_syndrome_subunit is
     generic (
         WORD_LENGTH : natural range 2 to 10;
         I : natural range 0 to 1021;
+        FCR : natural range 0 to 1022 := 0;
         TEST_MODE : boolean := false
     );
     port (
@@ -23,6 +24,7 @@ entity rs_syndrome_subunit is
 end rs_syndrome_subunit;
 
 architecture behavioral of rs_syndrome_subunit is
+    constant ROOT_INDEX : natural := (I + FCR) mod (2**WORD_LENGTH - 1);
 
     signal w_end_adder_selector : std_logic_vector(WORD_LENGTH-1 downto 0);
     --output END_ADDER signals
@@ -42,6 +44,10 @@ begin
 	 assert (I <= 2**WORD_LENGTH-3) 
 		  report "ASSERT FAILURE - I <= 2**WORD_LENGTH-3 is not valid" 
 		  severity failure;
+
+	 assert (FCR <= 2**WORD_LENGTH-2) 
+		  report "ASSERT FAILURE - FCR <= 2**WORD_LENGTH-2 is not valid" 
+		  severity failure;
 		  
     w_end_adder_selector <=  r_dff when (i_select_feedback = '1') 
                              else (others => '0');
@@ -53,7 +59,7 @@ begin
                          o => w_feedback);
     MULTIPLIER: rs_multiplier
                 generic map (WORD_LENGTH => WORD_LENGTH, 
-                             MULT_CONSTANT => get_pow(WORD_LENGTH, I),
+                             MULT_CONSTANT => get_pow(WORD_LENGTH, ROOT_INDEX),
                              TEST_MODE => TEST_MODE)
                 port map (i => w_feedback, 
                           o => w_multiplier);

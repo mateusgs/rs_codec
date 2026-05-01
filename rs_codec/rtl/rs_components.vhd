@@ -54,6 +54,7 @@ package RS_COMPONENTS is
     generic (
         WORD_LENGTH : natural range 2 to 10;
         I : natural range 0 to 1021;
+        FCR : natural range 0 to 1022 := 0;
         TEST_MODE : boolean := false
     );
     port (
@@ -130,6 +131,7 @@ package RS_COMPONENTS is
 			K : natural range 1 to 1022;
             RS_GF : RSGFSize := RS_GF_NONE;
             MODE : boolean := false; -- ENCODER=false and DECODER=true
+            FCR : natural range 0 to 1022 := 0;
             TEST_MODE : boolean := false
    	    );
         port (
@@ -240,6 +242,7 @@ package RS_COMPONENTS is
             WORD_LENGTH : natural range 2 to 10;
             TWO_TIMES_T : natural range 1 to 1022;
             OUTPUT_PARITY_SYMBOLS : boolean;
+            FCR : natural range 0 to 1022 := 0;
             TEST_MODE : boolean := false
         );
         port (
@@ -287,6 +290,7 @@ package RS_COMPONENTS is
 			K : natural range 1 to 1022;
             RS_GF : RSGFSize := RS_GF_NONE;
             OUTPUT_PARITY_SYMBOLS : boolean := true;
+            FCR : natural range 0 to 1022 := 0;
             TEST_MODE : boolean := false
         );
         port (
@@ -380,6 +384,7 @@ package RS_COMPONENTS is
         generic (
             WORD_LENGTH : natural range 2 to 10;
             TWO_TIMES_T : natural range 1 to 1022;
+            FCR : natural range 0 to 1022 := 0;
             TEST_MODE : boolean := false
         );
         port (
