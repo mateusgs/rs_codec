@@ -49,6 +49,7 @@ begin
                   i_end_codeword => i_end_codeword,
                   i_start_codeword => i_start_codeword,
                   i_valid => i_valid,
+                  i_consume => '0',
                   i_symbol => i_symbol,
                   o_in_ready => o_in_ready,
                   o_end_codeword => o_end_codeword,
@@ -67,16 +68,13 @@ begin
 
     STIM_PROCESS : process
     begin
-        rst <= '0';
+        rst <= '1';
         i_start_codeword <= '0';
         i_end_codeword <= '0';
         i_valid <= '0';
         i_symbol <= "0000";
         wait for CLK_PERIOD*5;
-        rst <= '1';
-        wait for CLK_PERIOD*5;
         rst <= '0';
-        wait for CLK_PERIOD*5;
         i_symbol <= "0001";
         i_start_codeword <= '1';
         i_valid <= '1';

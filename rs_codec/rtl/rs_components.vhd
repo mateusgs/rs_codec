@@ -162,6 +162,7 @@ package RS_COMPONENTS is
             i_end_codeword : in std_logic;
             i_start_codeword : in std_logic;
             i_valid : in std_logic;
+            i_consume : in std_logic;
             i_symbol : in std_logic_vector(get_word_length_from_rs_gf(N, RS_GF)-1 downto 0);
             o_end_codeword : out std_logic;
             o_error : out std_logic;

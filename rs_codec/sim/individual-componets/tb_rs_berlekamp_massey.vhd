@@ -42,8 +42,7 @@ begin
 
     UUT: rs_berlekamp_massey
          generic map(WORD_LENGTH => WORD_LENGTH, 
-                     TWO_TIMES_T => TWO_TIMES_T,
-                     T => T)
+                     TWO_TIMES_T => TWO_TIMES_T)
          port map(clk => clk,
                   rst => rst,
                   i_fifo_chien_forney_full => i_fifo_chien_forney_full,

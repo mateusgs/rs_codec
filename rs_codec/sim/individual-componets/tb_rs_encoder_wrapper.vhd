@@ -5,6 +5,7 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.NUMERIC_STD.all;
 library WORK;
 use WORK.RS_COMPONENTS.rs_encoder_wrapper;
+use WORK.RS_TYPES.all;
 use work.GENERIC_TYPES.std_logic_vector_array;
 
 entity tb_rs_encoder_wrapper is
@@ -34,13 +35,14 @@ begin
     UUT: rs_encoder_wrapper
          generic map(N => N, 
                      K => K,
-                     WORD_LENGTH => WORD_LENGTH,
-                     TWO_TIMES_T => TWO_TIMES_T)
+                     RS_GF => RS_GF_16,
+                     TEST_MODE => false)
          port map(clk => clk,
                   rst => rst,
                   i_end_codeword => i_end_codeword,
                   i_start_codeword => i_start_codeword,
                   i_valid => i_valid,
+                  i_consume => '1',
                   i_symbol => i_symbol,
                   o_start_codeword => o_start_codeword,
                   o_end_codeword => o_end_codeword,
@@ -59,16 +61,13 @@ begin
 
     STIM_PROCESS : process
     begin
-        rst <= '0';
+        rst <= '1';
         i_start_codeword <= '0';
         i_end_codeword <= '0';
         i_valid <= '0';
         i_symbol <= "0000";
         wait for CLK_PERIOD*5;
-        rst <= '1';
-        wait for CLK_PERIOD*5;
         rst <= '0';
-        wait for CLK_PERIOD*5;
         i_start_codeword <= '1';
         i_valid <= '1';
         i_symbol <= "0001";
